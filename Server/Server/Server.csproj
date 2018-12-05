@@ -46,7 +46,7 @@
     <Compile Include="Clients.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="General.cs" />
-    <Compile Include="Log.cs" />
+    <Compile Include="Cnsl.cs" />
     <Compile Include="Packets.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

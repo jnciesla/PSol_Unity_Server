@@ -11,7 +11,7 @@ namespace Server
 
         public static void InitializePackets()
         {
-            Log.Debug("Initializing Network Packets...");
+            Cnsl.Debug("Initializing Network Packets...");
             packets = new Dictionary<long, Packet_>
             {
                 { (long)ClientPackets.CThankYouMessage, PACKET_THANKYOUMESSAGE },

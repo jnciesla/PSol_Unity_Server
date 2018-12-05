@@ -2,7 +2,7 @@
 
 namespace Server
 {
-    class Log
+    class Cnsl
     {
         public static void Info(string text)
         {
@@ -13,13 +13,13 @@ namespace Server
         public static void Debug(string text)
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("[Debug]" + text);
+            Console.WriteLine("[DEBUG]" + text);
             Console.ResetColor();
         }
-        public static void Message(string text)
+        public static void Log(string text)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("[Log]" + text);
+            Console.WriteLine("[LOG]" + text);
             Console.ResetColor();
         }
     }

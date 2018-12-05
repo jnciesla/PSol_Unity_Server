@@ -47,7 +47,7 @@ namespace Server
 
         public void CloseSocket()
         {
-            Log.Message("Connection from " + ip + " has been terminated");
+            Cnsl.Log("Connection from " + ip + " has been terminated");
             socket.Close();
             socket = null;
         }

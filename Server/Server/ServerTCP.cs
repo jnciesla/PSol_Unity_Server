@@ -27,7 +27,7 @@ namespace Server
                     Client[i].connectionID = i;
                     Client[i].ip = client.Client.RemoteEndPoint.ToString();
                     Client[i].Start();
-                    Log.Message("Connection received from " + Client[i].ip + " | ConnectionID: " + Client[i].connectionID);
+                    Cnsl.Log("Connection received from " + Client[i].ip + " | ConnectionID: " + Client[i].connectionID);
                     General.JoinGame(i);
                     return;
                 }
@@ -51,7 +51,7 @@ namespace Server
                 if (Client[i].socket != null)
                 {
                     SendDataTo(i, data);
-                    Console.WriteLine("Sending to " + Client[i].ip + " | ConnectionID: " + Client[i].connectionID);
+                    //Console.WriteLine("Sending to " + Client[i].ip + " | ConnectionID: " + Client[i].connectionID);
                 }
             }
         }
