@@ -1,0 +1,6 @@
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Debug\ByteBuffer.dll
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Debug\ByteBuffer.pdb
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.csprojAssemblyReference.cache
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.csproj.CoreCompileInputs.cache
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.dll
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.pdb

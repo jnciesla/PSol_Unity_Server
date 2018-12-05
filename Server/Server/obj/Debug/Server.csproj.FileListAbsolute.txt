@@ -1,0 +1,10 @@
+C:\PSOL Unity\Server\Server\Server\bin\Debug\Server.exe.config
+C:\PSOL Unity\Server\Server\Server\bin\Debug\Server.exe
+C:\PSOL Unity\Server\Server\Server\bin\Debug\Server.pdb
+C:\PSOL Unity\Server\Server\Server\bin\Debug\ByteBuffer.dll
+C:\PSOL Unity\Server\Server\Server\bin\Debug\ByteBuffer.pdb
+C:\PSOL Unity\Server\Server\Server\obj\Debug\Server.csprojAssemblyReference.cache
+C:\PSOL Unity\Server\Server\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\PSOL Unity\Server\Server\Server\obj\Debug\Server.csproj.CopyComplete
+C:\PSOL Unity\Server\Server\Server\obj\Debug\Server.exe
+C:\PSOL Unity\Server\Server\Server\obj\Debug\Server.pdb
