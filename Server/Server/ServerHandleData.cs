@@ -72,10 +72,9 @@ namespace Server
         }
         static void HandleDataPackets(long connectionID, byte[] data)
         {
-            long packetIdentifier;
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
-            packetIdentifier = buffer.ReadLong();
+            var packetIdentifier = buffer.ReadLong();
             buffer.Dispose();
 
             if (packets.TryGetValue(packetIdentifier, out var packet))

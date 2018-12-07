@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using Bindings;
 
 namespace Server
 {
@@ -11,9 +12,10 @@ namespace Server
 
         public static void InitializeNetwork()
         {
-            serverSocket = new TcpListener(IPAddress.Any, 5555);
+            serverSocket = new TcpListener(IPAddress.Any, Constants.PORT);
             serverSocket.Start();
             serverSocket.BeginAcceptTcpClient(OnClientConnect, null);
+            Console.Title = @"Project Sol Server | " + Constants.PORT;
         }
         static void OnClientConnect(IAsyncResult result)
         {
@@ -115,6 +117,14 @@ namespace Server
                 SendDataTo(connectionID, buffer.ToArray());
             }
             buffer.Dispose();
+        }
+
+        public static void PreparePulseBroadcast()
+        {
+            for (var i = 0; i < Constants.MAX_PLAYERS; i++)
+            {
+
+            }
         }
         #endregion
     }

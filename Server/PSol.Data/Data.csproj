@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3ED446D3-B597-4D06-B7AC-D5CA8E568FEB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Data</RootNamespace>
+    <AssemblyName>Data</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Migrations\201810262014258_Initial.cs" />
+    <Compile Include="Migrations\201810262014258_Initial.Designer.cs">
+      <DependentUpon>201810262014258_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810270930554_Colors.cs" />
+    <Compile Include="Migrations\201810270930554_Colors.Designer.cs">
+      <DependentUpon>201810270930554_Colors.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811040904469_Loot tables.cs" />
+    <Compile Include="Migrations\201811040904469_Loot tables.Designer.cs">
+      <DependentUpon>201811040904469_Loot tables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811061548465_item drop changes.cs" />
+    <Compile Include="Migrations\201811061548465_item drop changes.Designer.cs">
+      <DependentUpon>201811061548465_item drop changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811180507596_Cooldown.cs" />
+    <Compile Include="Migrations\201811180507596_Cooldown.Designer.cs">
+      <DependentUpon>201811180507596_Cooldown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811250441372_Item image 2.cs" />
+    <Compile Include="Migrations\201811250441372_Item image 2.Designer.cs">
+      <DependentUpon>201811250441372_Item image 2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811250459179_item image2 color.cs" />
+    <Compile Include="Migrations\201811250459179_item image2 color.Designer.cs">
+      <DependentUpon>201811250459179_item image2 color.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811270717001_cooldown2.cs" />
+    <Compile Include="Migrations\201811270717001_cooldown2.Designer.cs">
+      <DependentUpon>201811270717001_cooldown2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812061000085_Unity Initial.cs" />
+    <Compile Include="Migrations\201812061000085_Unity Initial.Designer.cs">
+      <DependentUpon>201812061000085_Unity Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Combat.cs" />
+    <Compile Include="Models\Inventory.cs" />
+    <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\Loot.cs" />
+    <Compile Include="Models\LootItem.cs" />
+    <Compile Include="Models\MobType.cs" />
+    <Compile Include="Models\Mob.cs" />
+    <Compile Include="Models\Nebula.cs" />
+    <Compile Include="Models\Planet.cs" />
+    <Compile Include="Models\Star.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="PSolDataContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Interfaces\IItemRepository.cs" />
+    <Compile Include="Repositories\ItemRepository.cs" />
+    <Compile Include="Repositories\MobRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IStarRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IMobRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
+    <Compile Include="Repositories\StarRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\GameService.cs" />
+    <Compile Include="Services\Interfaces\IGameService.cs" />
+    <Compile Include="Services\Interfaces\ICombatService.cs" />
+    <Compile Include="Services\Interfaces\IItemService.cs" />
+    <Compile Include="Services\Interfaces\IStarService.cs" />
+    <Compile Include="Services\Interfaces\IMobService.cs" />
+    <Compile Include="Services\Interfaces\IUserService.cs" />
+    <Compile Include="Services\ItemService.cs" />
+    <Compile Include="Services\MobService.cs" />
+    <Compile Include="Services\CombatService.cs" />
+    <Compile Include="Services\StarService.cs" />
+    <Compile Include="Services\UserService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201810262014258_Initial.resx">
+      <DependentUpon>201810262014258_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810270930554_Colors.resx">
+      <DependentUpon>201810270930554_Colors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811040904469_Loot tables.resx">
+      <DependentUpon>201811040904469_Loot tables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811061548465_item drop changes.resx">
+      <DependentUpon>201811061548465_item drop changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811180507596_Cooldown.resx">
+      <DependentUpon>201811180507596_Cooldown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811250441372_Item image 2.resx">
+      <DependentUpon>201811250441372_Item image 2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811250459179_item image2 color.resx">
+      <DependentUpon>201811250459179_item image2 color.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811270717001_cooldown2.resx">
+      <DependentUpon>201811270717001_cooldown2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812061000085_Unity Initial.resx">
+      <DependentUpon>201812061000085_Unity Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\Bindings\Bindings.projitems" Label="Shared" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
