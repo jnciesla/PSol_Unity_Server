@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using Data.Models;
 using Data.Repositories.Interfaces;
 using Data.Services.Interfaces;
@@ -33,12 +31,13 @@ namespace Data.Services
         {
             var newUser = new User
             {
-                Login = username,
-                Password = CalculateMD5Hash(password),
+                Password = password,
                 Name = username,
-                X = 10,
-                Y = 10,
-                Rotation = 135,
+                X = 0,
+                Z = 0,
+                Heading = 0,
+                Roll = 0,
+                M = 0,
                 Health = 100,
                 MaxHealth = 100,
                 Shield = 100,
@@ -58,20 +57,7 @@ namespace Data.Services
 
         public bool PasswordOK(string username, string password)
         {
-            return _userRepo.PasswordOK(username, CalculateMD5Hash(password));
-        }
-
-        private string CalculateMD5Hash(string input)
-        {
-            var md5 = MD5.Create();
-            var inputBytes = Encoding.ASCII.GetBytes(input);
-            var hash = md5.ComputeHash(inputBytes);
-            var sb = new StringBuilder();
-            foreach (var t in hash)
-            {
-                sb.Append(t.ToString("X2"));
-            }
-            return sb.ToString();
+            return _userRepo.PasswordOK(username, password);
         }
     }
 }

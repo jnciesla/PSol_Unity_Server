@@ -34,3 +34,6 @@ C:\PSOL Unity\Server\Server\Server\bin\Debug\Ninject.dll
 C:\PSOL Unity\Server\Server\Server\bin\Debug\Ninject.xml
 C:\PSOL Unity\Server\Server\Server\bin\Debug\EntityFramework.SqlServer.dll
 C:\PSOL Unity\Server\Server\Server\bin\Debug\EntityFramework.SqlServer.xml
+C:\PSOL Unity\Server\Server\Server\bin\Debug\Newtonsoft.Json.dll
+C:\PSOL Unity\Server\Server\Server\bin\Debug\Newtonsoft.Json.pdb
+C:\PSOL Unity\Server\Server\Server\bin\Debug\Newtonsoft.Json.xml

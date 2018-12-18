@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bindings;
 using Data.Models;
 
 namespace Server
@@ -9,6 +10,7 @@ namespace Server
         /// "Static" data has changed.  Set this bool to broadcast data not in normal broadcast
         /// </summary>
         public static bool FullData;
+        public static bool Initialized = false;
 
         public static ICollection<Star> Galaxy;
         public static ICollection<Item> Items;

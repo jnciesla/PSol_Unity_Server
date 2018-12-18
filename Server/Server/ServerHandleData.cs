@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Bindings;
 
 namespace Server
 {
@@ -16,7 +18,8 @@ namespace Server
             {
                 { (long)ClientPackets.CThankYouMessage, PACKET_THANKYOUMESSAGE },
                 { (long)ClientPackets.CMovement, PACKET_CLIENTMOVEMENT },
-                { (long)ClientPackets.CMessage, PACKET_CLIENTMESSAGE }
+                { (long)ClientPackets.CMessage, PACKET_CLIENTMESSAGE },
+                { (long)ClientPackets.CLogin, PACKET_LOGIN },
             };
         }
 
@@ -106,8 +109,14 @@ namespace Server
             var Y = buffer.ReadFloat();     // Heading
             var Z = buffer.ReadFloat();     // Roll
             var M = buffer.ReadInteger();   // Moving
-            ServerTCP.PlayerMove((int)connectionID, x, z, Y, Z, M);
             buffer.Dispose();
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Types.PlayerIds[connectionID]);
+            if (player == null) return;
+            player.X = x;
+            player.Z = z;
+            player.Roll = Y;
+            player.Heading = Z;
+            player.M = M;
         }
 
         static void PACKET_CLIENTMESSAGE(long connectionID, byte[] data)
@@ -116,8 +125,38 @@ namespace Server
             buffer.WriteBytes(data);
             buffer.ReadLong();
             var msg = buffer.ReadString();
-            ServerTCP.SendMessage(-1, msg);
+            ServerTCP.SendMessage(-1, msg, (int)ChatPackets.Chat);
             buffer.Dispose();
+        }
+
+        static void PACKET_LOGIN(long connectionID, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var user = buffer.ReadString();
+            var pass = buffer.ReadString();
+            var validate = Program._userService.PasswordOK(user, pass);
+            if (!validate)
+            {
+                ServerTCP.SendSystemByte((int)connectionID, SystemBytes.SysInvPass);
+                return;
+            }
+            buffer.Dispose();
+
+            var player = Program._userService.LoadPlayer(user);
+            player.inGame = true;
+            player.receiving = true;
+            Types.PlayerIds[connectionID] = player.Id;
+            Program._userService.ActiveUsers.Add(player);
+            General.JoinGame((int)connectionID);
+            //ServerTCP.SendLoad(connectionID);
+            //ServerTCP.SendGalaxy(connectionID);
+            //ServerTCP.SendItems(connectionID);
+            //ServerTCP.SendNebulae(connectionID);
+            ServerTCP.SendMessage(-1, player.Name + " has connected.", (int)ChatPackets.Notification);
+            Globals.FullData = true;
+            Cnsl.Log(user + @" logged in successfully.");
         }
         #endregion
     }

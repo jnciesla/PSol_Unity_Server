@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Bindings;
@@ -30,7 +31,6 @@ namespace Server
                     Client[i].ip = client.Client.RemoteEndPoint.ToString();
                     Client[i].Start();
                     Cnsl.Log("Connection received from " + Client[i].ip + " | ConnectionID: " + Client[i].connectionID);
-                    General.JoinGame(i);
                     return;
                 }
             }
@@ -53,7 +53,6 @@ namespace Server
                 if (Client[i].socket != null)
                 {
                     SendDataTo(i, data);
-                    //Console.WriteLine("Sending to " + Client[i].ip + " | ConnectionID: " + Client[i].connectionID);
                 }
             }
         }
@@ -103,11 +102,12 @@ namespace Server
             buffer.Dispose();
         }
 
-        public static void SendMessage(int connectionID, string message)
+        public static void SendMessage(int connectionID, string message, int type)
         {
             var buffer = new ByteBuffer();
             buffer.WriteLong((long)ServerPackets.SMessage);
             buffer.WriteString(message);
+            buffer.WriteInteger(type);
             if (connectionID < 0)
             {
                 SendDataToAll(buffer.ToArray());
@@ -121,10 +121,58 @@ namespace Server
 
         public static void PreparePulseBroadcast()
         {
+            var look = 2000;
+            //Program._combatService.CycleArrays();
             for (var i = 0; i < Constants.MAX_PLAYERS; i++)
             {
-
+                if (Client[i].socket != null)
+                {
+                    var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Types.PlayerIds[i]);
+                    if (player == null) continue;
+                    if (player.inGame && player.receiving)
+                    {
+                        var buffer = new ByteBuffer();
+                        buffer.WriteLong((long)ServerPackets.SPulse);
+                        buffer.WriteInteger(Program._userService.ActiveUsers.Count);
+                        buffer.WriteBytes(BitConverter.GetBytes(DateTime.UtcNow.ToBinary()));
+                        Program._userService.ActiveUsers.ForEach(p =>
+                        {
+                            var index = Array.IndexOf(Types.PlayerIds, p.Id);
+                            buffer.WriteInteger(index);
+                            buffer.WriteString(p.Id);
+                            buffer.WriteFloat(p.X);
+                            buffer.WriteFloat(p.Z);
+                            buffer.WriteFloat(p.Heading);
+                            buffer.WriteFloat(p.Roll);
+                            buffer.WriteInteger(p.M);
+                            buffer.WriteInteger(p.Health);
+                            buffer.WriteInteger(p.MaxHealth);
+                            buffer.WriteInteger(p.Shield);
+                            buffer.WriteInteger(p.MaxShield);
+                            buffer.WriteBytes(BitConverter.GetBytes(Program._userService.ActiveUsers[index].inGame));
+                        });
+                        var minX = (int)player.X - look;
+                        var minY = (int)player.Z - look;
+                        var maxX = (int)player.X + look;
+                        var maxY = (int)player.Z + look;
+                        //buffer.WriteArray(Program._mobService.GetMobs(minX, maxX, minY, maxY).ToArray());
+                        //buffer.WriteArray(Program._combatService.GetCombats((int)player.X, (int)player.Z).ToArray());
+                        //buffer.WriteArray(Globals.Inventory.Where(m => m.X >= minX && m.X <= maxX && m.Y >= minY && m.Y <= maxY).ToArray());
+                        //buffer.WriteArray(Globals.Loot.Where(L => L.X >= minX && L.X <= maxX && L.Y >= minY && L.Y <= maxY && L.Owner == player.Id).ToArray());
+                        SendDataTo(i, buffer.ToArray());
+                        buffer.Dispose();
+                    }
+                }
             }
+        }
+
+        public static void SendSystemByte(int connectionID, SystemBytes sysByte)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteLong((long)ServerPackets.SSystemByte);
+            buffer.WriteLong((long)sysByte);
+            SendDataTo(connectionID, buffer.ToArray());
+            buffer.Dispose();
         }
         #endregion
     }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
-
 
 public class ByteBuffer : IDisposable
 {
@@ -37,6 +37,14 @@ public class ByteBuffer : IDisposable
         readpos = 0;
     }
     #endregion
+
+    public void WriteArray(Array input)
+    {
+        var JSON = JsonConvert.SerializeObject(input);
+        Buff.AddRange(BitConverter.GetBytes(JSON.Length));
+        Buff.AddRange(Encoding.ASCII.GetBytes(JSON));
+        buffUpdated = true;
+    }
 
     public void WriteInteger(int Input)
     {
@@ -130,6 +138,27 @@ public class ByteBuffer : IDisposable
             throw new Exception("Byte Buffer is Past Limit!Make sure you are reading out the correct value!");
         }
     }
+
+    public List<T> ReadList<T>(bool peek = true)
+    {
+        var length = ReadInteger(true);
+        if (buffUpdated)
+        {
+            readbuff = Buff.ToArray();
+            buffUpdated = false;
+        }
+
+        var JSON = Encoding.ASCII.GetString(readbuff, readpos, length);
+        if (peek & Buff.Count > readpos)
+        {
+            if (JSON.Length > 0)
+            {
+                readpos += length;
+            }
+        }
+        return JsonConvert.DeserializeObject<List<T>>(JSON);
+    }
+
     public long ReadLong(bool Peek = true)
     {
         if (Buff.Count > readpos)

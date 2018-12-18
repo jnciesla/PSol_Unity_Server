@@ -180,7 +180,7 @@ namespace Data.Services
         private void CheckSingleAggro(Mob m)
         {
             m.TargettingId = null;
-            var players = _userService.ActiveUsers.Where(p => p.X > m.X - 100 && p.X < m.X + 100 && p.Y > m.Y - 100 && p.Y < m.Y + 100).ToList();
+            var players = _userService.ActiveUsers.Where(p => p.X > m.X - 100 && p.X < m.X + 100 && p.Z > m.Y - 100 && p.Z < m.Y + 100).ToList();
             if (players.Count == 0) return;
             var ndx = 0;
             if (players.Count > 1)
@@ -191,7 +191,7 @@ namespace Data.Services
             m.TargettingId = players[ndx].Id;
             // Nav to them - gets us close
             m.NavToX = players[ndx].X;
-            m.NavToY = players[ndx].Y;
+            m.NavToY = players[ndx].Z;
         }
 
         public void DoCombat()
@@ -207,10 +207,10 @@ namespace Data.Services
                     target = _userService.ActiveUsers.Find(p => p.Id == m.TargettingId);
                 }
                 // Set wander towards mob if they're not too far away from home
-                if (target != null && target.Health > 0 && Math.Abs(target.X - m.MobType.Star.X) < 1000 && Math.Abs(target.Y - m.MobType.Star.Y) < 1000)
+                if (target != null && target.Health > 0 && Math.Abs(target.X - m.MobType.Star.X) < 1000 && Math.Abs(target.Z - m.MobType.Star.Y) < 1000)
                 {
                     m.NavToX = target.X;
-                    m.NavToY = target.Y;
+                    m.NavToY = target.Z;
                 }
                 else
                 {

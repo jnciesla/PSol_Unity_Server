@@ -4,3 +4,7 @@ C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.csprojAssemblyRefere
 C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.csproj.CoreCompileInputs.cache
 C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.dll
 C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.pdb
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Debug\Newtonsoft.Json.dll
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Debug\Newtonsoft.Json.pdb
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Debug\Newtonsoft.Json.xml
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Debug\ByteBuffer.csproj.CopyComplete

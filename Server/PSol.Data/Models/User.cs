@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models
 {
     public class User
     {
-        public string Id { get; set; }
         // Account
-        public string Login { get; set; }
+        public string Id { get; set; }
         public string Password { get; set; }
+        [NotMapped] public bool inGame { get; set; }
+        [NotMapped] public bool receiving { get; set; }
 
         // General
         public string Rank { get; set; }
@@ -45,14 +47,17 @@ namespace Data.Models
         public int Weap5ChargeRate { get; set; }
         public DateTime Cooldown { get; set; }
         public int CooldownSpan { get; set; }
-        
+
 
         // Inventory
         public virtual ICollection<Inventory> Inventory { get; set; }
 
         // Position
         public float X { get; set; }
-        public float Y { get; set; }
-        public float Rotation { get; set; }
+        public float Z { get; set; }
+        public float Heading { get; set; }
+        public float Roll { get; set; }
+        public int M { get; set; }
+
     }
 }

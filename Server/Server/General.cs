@@ -1,6 +1,6 @@
 ﻿using System;
 using Bindings;
-using Data.Services;
+using Data.Models;
 
 namespace Server
 {
@@ -30,10 +30,11 @@ namespace Server
             var endTime = GetTickCount();
             Cnsl.Info("Initialization complete. Server loaded in " + (endTime - startTime) + " ms.");
             Cnsl.Banner(" Server has started successfully \n   @ "+ DateTime.UtcNow + " UTC");
+            Globals.Initialized = true;
         }
         public static void LoadData()
         {
-            Cnsl.Info("Loading data...");
+            Cnsl.Info("Loading data:");
             var items = 0;
             var startTime = GetTickCount();
             Cnsl.Debug("Loading items...");
@@ -51,5 +52,6 @@ namespace Server
             ServerTCP.SendIngame(connectionID);
             ServerTCP.SendToGalaxy(connectionID);
         }
+
     }
 }

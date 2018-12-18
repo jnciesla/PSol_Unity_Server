@@ -1,0 +1,10 @@
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Release\ByteBuffer.dll
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Release\ByteBuffer.pdb
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Release\Newtonsoft.Json.dll
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Release\Newtonsoft.Json.pdb
+C:\PSOL Unity\Server\Server\ByteBuffer\bin\Release\Newtonsoft.Json.xml
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Release\ByteBuffer.csprojAssemblyReference.cache
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Release\ByteBuffer.csproj.CoreCompileInputs.cache
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Release\ByteBuffer.csproj.CopyComplete
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Release\ByteBuffer.dll
+C:\PSOL Unity\Server\Server\ByteBuffer\obj\Release\ByteBuffer.pdb

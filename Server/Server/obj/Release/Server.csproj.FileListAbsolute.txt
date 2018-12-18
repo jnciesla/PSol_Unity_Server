@@ -1,0 +1,2 @@
+C:\PSOL Unity\Server\Server\Server\obj\Release\Server.csprojAssemblyReference.cache
+C:\PSOL Unity\Server\Server\Server\obj\Release\Server.csproj.CoreCompileInputs.cache
