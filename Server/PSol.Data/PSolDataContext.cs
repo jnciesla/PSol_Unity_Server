@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity;
-using Data.Models;
+using DMod.Models;
 
 namespace Data
 {

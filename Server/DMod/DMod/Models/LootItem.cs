@@ -1,5 +1,5 @@
 ﻿
-namespace Data.Models
+namespace DMod.Models
 {
     public class LootItem
     {

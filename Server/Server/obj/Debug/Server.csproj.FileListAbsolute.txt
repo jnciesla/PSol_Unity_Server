@@ -37,3 +37,5 @@ C:\PSOL Unity\Server\Server\Server\bin\Debug\EntityFramework.SqlServer.xml
 C:\PSOL Unity\Server\Server\Server\bin\Debug\Newtonsoft.Json.dll
 C:\PSOL Unity\Server\Server\Server\bin\Debug\Newtonsoft.Json.pdb
 C:\PSOL Unity\Server\Server\Server\bin\Debug\Newtonsoft.Json.xml
+C:\PSOL Unity\Server\Server\Server\bin\Debug\DMod.dll
+C:\PSOL Unity\Server\Server\Server\bin\Debug\DMod.pdb

@@ -1,16 +1,16 @@
 ﻿public enum ServerPackets
 {
-    SIngame =1,
+    SIngame = 1,
     SPlayerData,
-    SPlayerMove,
     SMessage,
     SSystemByte,
-    SPulse
+    SPulse,
+    SGalaxy,
+    SItems,
 }
 
 public enum ClientPackets
 {
-    CThankYouMessage = 1,
     CMovement,
     CMessage,
     CLogin,

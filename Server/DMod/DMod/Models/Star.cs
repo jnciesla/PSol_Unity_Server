@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-namespace Data.Models
+namespace DMod.Models
 {
     public class Star
     {

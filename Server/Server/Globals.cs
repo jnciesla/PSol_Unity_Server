@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Bindings;
-using Data.Models;
+using DMod.Models;
 
 namespace Server
 {

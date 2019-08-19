@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Bindings;
 
@@ -8,15 +7,15 @@ namespace Server
     public class ServerHandleData
     {
         private delegate void Packet_(long connectionID, byte[] data);
-        static Dictionary<long, Packet_> packets;
-        static long pLength;
+
+        private static Dictionary<long, Packet_> packets;
+        private static long pLength;
 
         public static void InitializePackets()
         {
             Cnsl.Debug("Initializing Network Packets...");
             packets = new Dictionary<long, Packet_>
             {
-                { (long)ClientPackets.CThankYouMessage, PACKET_THANKYOUMESSAGE },
                 { (long)ClientPackets.CMovement, PACKET_CLIENTMOVEMENT },
                 { (long)ClientPackets.CMessage, PACKET_CLIENTMESSAGE },
                 { (long)ClientPackets.CLogin, PACKET_LOGIN },
@@ -25,8 +24,7 @@ namespace Server
 
         public static void HandleData(long connectionID, byte[] data)
         {
-            byte[] Buffer;
-            Buffer = (byte[])data.Clone();
+            var Buffer = (byte[])data.Clone();
 
             if (ServerTCP.Client[connectionID].playerBuffer == null)
             {
@@ -73,7 +71,8 @@ namespace Server
                 }
             }
         }
-        static void HandleDataPackets(long connectionID, byte[] data)
+
+        private static void HandleDataPackets(long connectionID, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -86,20 +85,8 @@ namespace Server
             }
         }
         #region Handle packets
-        static void PACKET_THANKYOUMESSAGE(long connectionID, byte[] data)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
 
-            buffer.ReadLong();
-            var msg = buffer.ReadString();
-
-            Console.WriteLine(msg);
-
-            buffer.Dispose();
-        }
-
-        static void PACKET_CLIENTMOVEMENT(long connectionID, byte[] data)
+        private static void PACKET_CLIENTMOVEMENT(long connectionID, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -114,22 +101,27 @@ namespace Server
             if (player == null) return;
             player.X = x;
             player.Z = z;
-            player.Roll = Y;
-            player.Heading = Z;
+            player.Heading = Y;
+            player.Roll = Z;
             player.M = M;
         }
 
-        static void PACKET_CLIENTMESSAGE(long connectionID, byte[] data)
+        private static void PACKET_CLIENTMESSAGE(long connectionID, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             buffer.ReadLong();
             var msg = buffer.ReadString();
-            ServerTCP.SendMessage(-1, msg, (int)ChatPackets.Chat);
+            if (msg.ToLower().StartsWith("/c"))
+            {
+                var player = Program._userService.ActiveUsers.Find(p => p.Id == Types.PlayerIds[connectionID]);
+                var newString = player.Name + ": " + msg.Substring(3);
+                ServerTCP.SendMessage(-1, newString, (int)ChatPackets.Chat);
+            }
             buffer.Dispose();
         }
 
-        static void PACKET_LOGIN(long connectionID, byte[] data)
+        private static void PACKET_LOGIN(long connectionID, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -146,17 +138,21 @@ namespace Server
 
             var player = Program._userService.LoadPlayer(user);
             player.inGame = true;
-            player.receiving = true;
             Types.PlayerIds[connectionID] = player.Id;
             Program._userService.ActiveUsers.Add(player);
-            General.JoinGame((int)connectionID);
-            //ServerTCP.SendLoad(connectionID);
-            //ServerTCP.SendGalaxy(connectionID);
-            //ServerTCP.SendItems(connectionID);
+            ServerTCP.SendToGalaxy((int)connectionID);
+            System.Threading.Thread.Sleep(500);
+            ServerTCP.SendIngame((int)connectionID);
+            System.Threading.Thread.Sleep(500);
+            //ServerTCP.SendItems((int)connectionID);
             //ServerTCP.SendNebulae(connectionID);
             ServerTCP.SendMessage(-1, player.Name + " has connected.", (int)ChatPackets.Notification);
+            System.Threading.Thread.Sleep(500);
+            ServerTCP.SendGalaxy((int)connectionID);
+            System.Threading.Thread.Sleep(500);
             Globals.FullData = true;
             Cnsl.Log(user + @" logged in successfully.");
+            player.receiving = true;
         }
         #endregion
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using Bindings;
-using Data.Models;
 
 namespace Server
 {
@@ -45,12 +44,6 @@ namespace Server
             items += Globals.Galaxy.Count;
             var endTime = GetTickCount();
             Cnsl.Info("Data loaded (" + items + " points) in " + (endTime - startTime) + " ms.");
-        }
-
-        public static void JoinGame(int connectionID)
-        {
-            ServerTCP.SendIngame(connectionID);
-            ServerTCP.SendToGalaxy(connectionID);
         }
 
     }

@@ -1,4 +1,4 @@
-﻿using Data.Models;
+﻿using DMod.Models;
 using System.Collections.Generic;
 
 namespace Data.Repositories.Interfaces

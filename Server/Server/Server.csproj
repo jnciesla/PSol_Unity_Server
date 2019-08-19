@@ -88,6 +88,10 @@
       <Project>{e3ae47c8-0cc9-4ced-9d46-4a85b67c264c}</Project>
       <Name>ByteBuffer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DMod\DMod\DMod.csproj">
+      <Project>{e4c53d19-dba8-42f9-98b8-e8cd31b0ad2f}</Project>
+      <Name>DMod</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PSol.Data\Data.csproj">
       <Project>{3ed446d3-b597-4d06-b7ac-d5ca8e568feb}</Project>
       <Name>Data</Name>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Data.Models
+namespace DMod.Models
 {
     public class Loot
     {

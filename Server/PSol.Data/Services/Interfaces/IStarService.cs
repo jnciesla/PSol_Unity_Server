@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Data.Models;
+using DMod.Models;
 
 namespace Data.Services.Interfaces
 {

@@ -31,3 +31,5 @@ C:\PSOL Unity\Server\Server\PSol.Data\obj\Debug\Data.pdb
 C:\PSOL Unity\Server\Server\PSol.Data\bin\Debug\Newtonsoft.Json.pdb
 C:\PSOL Unity\Server\Server\PSol.Data\obj\Debug\Data.Migrations.Initial.resources
 C:\PSOL Unity\Server\Server\PSol.Data\obj\Debug\Data.csproj.GenerateResource.cache
+C:\PSOL Unity\Server\Server\PSol.Data\bin\Debug\DMod.dll
+C:\PSOL Unity\Server\Server\PSol.Data\bin\Debug\DMod.pdb

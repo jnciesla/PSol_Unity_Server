@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -18,7 +20,8 @@ namespace Server
             serverSocket.BeginAcceptTcpClient(OnClientConnect, null);
             Console.Title = @"Project Sol Server | " + Constants.PORT;
         }
-        static void OnClientConnect(IAsyncResult result)
+
+        private static void OnClientConnect(IAsyncResult result)
         {
             var client = serverSocket.EndAcceptTcpClient(result);
             serverSocket.BeginAcceptTcpClient(OnClientConnect, null);
@@ -36,70 +39,87 @@ namespace Server
             }
         }
 
-        private static void SendDataTo(int connectionID, byte[] data)
+        public static void SendDataTo(int index, byte[] data)
         {
             var buffer = new ByteBuffer();
-            buffer.WriteLong((data.GetUpperBound(0) - data.GetLowerBound(0)) + 1);
-            buffer.WriteBytes(data);
-            Client[connectionID].myStream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
+            var compressed = Compress(data);
+            buffer.WriteBytes(compressed);
+            try
+            {
+                Client[index].myStream.Write(buffer.ToArray(), 0, buffer.ToArray().Length);
+            }
+            catch
+            {
+                Cnsl.Debug(@"Unable to send packet- client disconnected");
+            }
+
             buffer.Dispose();
         }
 
-        private static void SendDataToAll(byte[] data, int connectionID = -1)
+        public static void SendDataToAll(byte[] data)
         {
             for (var i = 0; i < Constants.MAX_PLAYERS; i++)
             {
-                if (i == connectionID) continue;
-                if (Client[i].socket != null)
-                {
-                    SendDataTo(i, data);
-                }
+                if (Client[i].socket == null) continue;
+                var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Types.PlayerIds[i]);
+                if (player == null) continue;
+                if (!player.inGame) continue;
+                SendDataTo(i, data);
             }
         }
 
         #region SendPackages
-        public static void SendIngame(int connectionID)
+        public static void SendIngame(int connectionID, int suppress = 0)
         {
             var buffer = new ByteBuffer();
+            var player = Program._userService.ActiveUsers.Find(p => p.Id == Types.PlayerIds[connectionID]);
             buffer.WriteLong((long)ServerPackets.SIngame);
             buffer.WriteInteger(connectionID);
+            buffer.WriteInteger(suppress);
+            buffer.WriteString(player.Id);
+            buffer.WriteString(player.Name);
+            buffer.WriteFloat(player.X);
+            buffer.WriteFloat(player.Z);
+            buffer.WriteFloat(player.Heading);
+            buffer.WriteFloat(player.Roll);
+            buffer.WriteInteger(player.Health);
+            buffer.WriteInteger(player.MaxHealth);
+            buffer.WriteInteger(player.Shield);
+            buffer.WriteInteger(player.MaxShield);
+            buffer.WriteString(player.Rank);
+            buffer.WriteInteger(player.Credits);
+            buffer.WriteInteger(player.Exp);
+            buffer.WriteInteger(player.Level);
+            buffer.WriteInteger(player.Weap1Charge);
+            buffer.WriteInteger(player.Weap2Charge);
+            buffer.WriteInteger(player.Weap3Charge);
+            buffer.WriteInteger(player.Weap4Charge);
+            buffer.WriteInteger(player.Weap5Charge);
+            //buffer.WriteArray(player.Inventory.ToArray());
             SendDataTo(connectionID, buffer.ToArray());
             buffer.Dispose();
+
         }
         public static byte[] PlayerData(int connectionID)
         {
             var buffer = new ByteBuffer();
             buffer.WriteLong((long)ServerPackets.SPlayerData);
             buffer.WriteInteger(connectionID);
-            return buffer.ToArray();
+            var data = buffer.ToArray();
+            buffer.Dispose();
+            return data;
         }
         public static void SendToGalaxy(int connectionID)
         {
             for (var i = 0; i < Constants.MAX_PLAYERS; i++)
             {
-                if (Client[i].socket != null)
+                if (Client[i].socket == null) continue;
+                if (i != connectionID)
                 {
-                    if (i != connectionID)
-                    {
-                        SendDataTo(connectionID, PlayerData(i));
-                    }
+                    SendDataTo(connectionID, PlayerData(i));
                 }
             }
             SendDataToAll(PlayerData(connectionID));
-        }
-
-        public static void PlayerMove(int connectionID, float x, float z, float Y, float Z, int M)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteLong((long)ServerPackets.SPlayerMove);
-            buffer.WriteInteger(connectionID);
-            buffer.WriteFloat(x);
-            buffer.WriteFloat(z);
-            buffer.WriteFloat(Y);
-            buffer.WriteFloat(Z);
-            buffer.WriteInteger(M);
-            SendDataToAll(buffer.ToArray(), connectionID);
-            buffer.Dispose();
         }
 
         public static void SendMessage(int connectionID, string message, int type)
@@ -166,6 +186,24 @@ namespace Server
             }
         }
 
+        public static void SendGalaxy(int index)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteLong((long)ServerPackets.SGalaxy);
+            buffer.WriteArray(Globals.Galaxy.ToArray());
+            SendDataTo(index, buffer.ToArray());
+            buffer.Dispose();
+        }
+
+        public static void SendItems(int index)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteLong((long)ServerPackets.SItems);
+            buffer.WriteArray(Globals.Items.ToArray());
+            SendDataTo(index, buffer.ToArray());
+            buffer.Dispose();
+        }
+
         public static void SendSystemByte(int connectionID, SystemBytes sysByte)
         {
             var buffer = new ByteBuffer();
@@ -175,6 +213,19 @@ namespace Server
             buffer.Dispose();
         }
         #endregion
+
+        public static byte[] Compress(byte[] bytes)
+        {
+            using (var msi = new MemoryStream(bytes))
+            using (var mso = new MemoryStream())
+            {
+                using (var gs = new GZipStream(mso, CompressionLevel.Optimal))
+                {
+                    msi.CopyTo(gs);
+                }
+                return mso.ToArray();
+            }
+        }
     }
 }
 

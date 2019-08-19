@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace Data.Models
+﻿namespace DMod.Models
 {
     public class Combat
     {

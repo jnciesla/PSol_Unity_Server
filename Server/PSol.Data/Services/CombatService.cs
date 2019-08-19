@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Data.Models;
+using DMod.Models;
 using Data.Services.Interfaces;
 
 namespace Data.Services

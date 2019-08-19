@@ -11,6 +11,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Bindings", "Bindings\Bindin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "PSol.Data\Data.csproj", "{3ED446D3-B597-4D06-B7AC-D5CA8E568FEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMod", "DMod\DMod\DMod.csproj", "{E4C53D19-DBA8-42F9-98B8-E8CD31B0AD2F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Bindings\Bindings.projitems*{388b3e5d-21e7-4665-ae6e-f084c45fb577}*SharedItemsImports = 13
@@ -33,6 +35,10 @@ Global
 		{3ED446D3-B597-4D06-B7AC-D5CA8E568FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3ED446D3-B597-4D06-B7AC-D5CA8E568FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3ED446D3-B597-4D06-B7AC-D5CA8E568FEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4C53D19-DBA8-42F9-98B8-E8CD31B0AD2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4C53D19-DBA8-42F9-98B8-E8CD31B0AD2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4C53D19-DBA8-42F9-98B8-E8CD31B0AD2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4C53D19-DBA8-42F9-98B8-E8CD31B0AD2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

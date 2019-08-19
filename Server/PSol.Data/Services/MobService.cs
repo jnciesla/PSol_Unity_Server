@@ -1,6 +1,6 @@
 ﻿using Bindings;
 using Microsoft.Xna.Framework;
-using Data.Models;
+using DMod.Models;
 using Data.Repositories.Interfaces;
 using Data.Services.Interfaces;
 using System;

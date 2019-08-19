@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data.Models;
+using DMod.Models;
 using Data.Repositories.Interfaces;
 
 namespace Data.Repositories

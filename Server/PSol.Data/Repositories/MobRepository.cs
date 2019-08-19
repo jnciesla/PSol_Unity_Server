@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using Data.Models;
+using DMod.Models;
 using Data.Repositories.Interfaces;
 
 namespace Data.Repositories
