@@ -15,9 +15,17 @@ namespace Server
 
         public static void InitializeNetwork()
         {
-            serverSocket = new TcpListener(IPAddress.Any, Constants.PORT);
-            serverSocket.Start();
-            serverSocket.BeginAcceptTcpClient(OnClientConnect, null);
+            try
+            {
+                serverSocket = new TcpListener(IPAddress.Any, Constants.PORT);
+                serverSocket.Start();
+                serverSocket.BeginAcceptTcpClient(OnClientConnect, null);
+                Cnsl.Finalize("Initializing Network");
+            }
+            catch
+            {
+                Cnsl.Finalize("Initializing Network", false);
+            }
             Console.Title = @"Project Sol Server | " + Constants.PORT;
         }
 

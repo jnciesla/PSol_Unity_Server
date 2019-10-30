@@ -16,7 +16,7 @@ namespace Server
         public static IItemService _itemService;
         public static ICombatService _combatService;
 
-        static void Main(string[] args)
+        private static void Main()
         {
             threadConsole = new Thread(ConsoleThread);
             threadConsole.Start();
@@ -30,7 +30,7 @@ namespace Server
             General.InitializeServer();
         }
 
-        static void ConsoleThread()
+        private static void ConsoleThread()
         {
             var command = "";
 
@@ -46,15 +46,32 @@ namespace Server
             while (command != "end" && command != "e" && command != "exit" && command != "q" && command != "quit")
             {
                 command = Console.ReadLine();
+                Console.CursorTop--;
+                switch (command)
+                {
+                    case "save":
+                        Cnsl.Log("Saving game",true);
+                        try
+                        {
+                            _gameService.SaveGame(_userService.ActiveUsers.ToList());
+                            Cnsl.Finalize("Saving game");
+                        }
+                        catch
+                        {
+                            Cnsl.Finalize("Saving game", false);
+                        }
 
-                if (command == "save")
-                {
-                    _gameService.SaveGame(_userService.ActiveUsers.ToList());
-                }
-                else if (command != "end" && command != "e" && command != "exit" && command != "q" &&
-                         command != "quit")
-                {
-                    Cnsl.Debug(@"Unknown Command");
+                        break;
+                    case "":
+                        Cnsl.Debug("#");
+                        break;
+                    default:
+                        if (command != "end" && command != "e" && command != "exit" && command != "q" && command != "quit")
+                        {
+                            Cnsl.Debug(@"Unknown Command");
+                        }
+
+                        break;
                 }
             }
 

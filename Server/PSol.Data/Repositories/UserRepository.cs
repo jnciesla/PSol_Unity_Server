@@ -67,7 +67,6 @@ namespace Data.Repositories
 
         public bool AccountExists(string username)
         {
-            Console.WriteLine(_context.Users.ToList().Count);
             return _context.Users.FirstOrDefault(u => u.Name == username) != null;
         }
 

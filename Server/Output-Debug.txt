@@ -1,0 +1,40 @@
+﻿'Server.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\Server.exe'. Symbols loaded.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\Ninject.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\Data.dll'. Symbols loaded.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\DMod.dll'. Symbols loaded.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'Anonymously Hosted DynamicMethods Assembly'. 
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\EntityFramework.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.Data\v4.0_4.0.0.0__b77a5c561934e089\System.Data.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\EntityFramework.SqlServer.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Numerics\v4.0_4.0.0.0__b77a5c561934e089\System.Numerics.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.Data.OracleClient\v4.0_4.0.0.0__b77a5c561934e089\System.Data.OracleClient.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.ComponentModel.DataAnnotations\v4.0_4.0.0.0__31bf3856ad364e35\System.ComponentModel.DataAnnotations.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.Transactions\v4.0_4.0.0.0__b77a5c561934e089\System.Transactions.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.EnterpriseServices\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.EnterpriseServices.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.EnterpriseServices\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.EnterpriseServices.Wrapper.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Runtime.Caching\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Runtime.Caching.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Xml.Linq\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.Linq.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Runtime.Serialization\v4.0_4.0.0.0__b77a5c561934e089\System.Runtime.Serialization.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'EntityFrameworkDynamicProxies-DMod'. 
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\ByteBuffer.dll'. Symbols loaded.
+'Server.exe' (CLR v4.0.30319: Server.exe): Loaded 'C:\PSOL Unity\Server\Server\Server\bin\Debug\Newtonsoft.Json.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+The thread 0x4508 has exited with code 0 (0x0).
+The thread 0x1360 has exited with code 0 (0x0).
+The thread 0x1324 has exited with code 0 (0x0).
+The thread 0x46e8 has exited with code 0 (0x0).
+The thread 0x212c has exited with code 0 (0x0).
+The thread 0x43cc has exited with code 0 (0x0).
+The thread 0x449c has exited with code 0 (0x0).
+The thread 0x18c has exited with code 0 (0x0).
+The thread 0x2f60 has exited with code 0 (0x0).
+The thread 0x1724 has exited with code 0 (0x0).
+The thread 0x3378 has exited with code 0 (0x0).
+The thread 0x1060 has exited with code 0 (0x0).
+The thread 0x212c has exited with code 0 (0x0).
+The thread 0x2d18 has exited with code 0 (0x0).
+The thread 0x3960 has exited with code 0 (0x0).

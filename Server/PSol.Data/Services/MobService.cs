@@ -31,7 +31,6 @@ namespace Data.Services
 
         public void RepopGalaxy(bool forceAll = false)
         {
-            Console.WriteLine(@"Repop");
             // Get all mobs and count them
             var activeMobs = GetMobs(getDead: true);
             var countOfAllMobs = activeMobs.GroupBy(g => g.MobTypeId)
@@ -77,8 +76,6 @@ namespace Data.Services
                 if (DateTime.UtcNow.Subtract(mob.KilledDate).CompareTo(new TimeSpan(0, 0, mob.MobType.SpawnTimeMax)) < 0 && coin) continue;
 
                 // Otherwise the coin flip passed or we've passed max spawn time
-                Console.WriteLine(@"Spawning " + mob.MobType.Name);
-
                 // Determine if he's going to be special
                 mob.Special = rnd.Next(0, 10) == 7;
 

@@ -18,7 +18,6 @@ namespace Data.Services
         }
         public void SaveGame(List<User> users)
         {
-            Console.WriteLine(@"Saving database");
             users.Where(u => u?.Id != null).ToList().ForEach(user =>
             {
                 _userRepository.SavePlayer(user);

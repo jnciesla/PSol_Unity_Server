@@ -13,13 +13,14 @@ namespace Server
 
         public static void InitializePackets()
         {
-            Cnsl.Debug("Initializing Network Packets...");
+            Cnsl.Debug("Initializing Network Packets",true);
             packets = new Dictionary<long, Packet_>
             {
                 { (long)ClientPackets.CMovement, PACKET_CLIENTMOVEMENT },
                 { (long)ClientPackets.CMessage, PACKET_CLIENTMESSAGE },
                 { (long)ClientPackets.CLogin, PACKET_LOGIN },
             };
+            Cnsl.Finalize("Initializing Network Packets");
         }
 
         public static void HandleData(long connectionID, byte[] data)
