@@ -1,6 +1,0 @@
-C:\PSOL Unity\Server\Server\DMod\DMod\bin\Debug\DMod.dll
-C:\PSOL Unity\Server\Server\DMod\DMod\bin\Debug\DMod.pdb
-C:\PSOL Unity\Server\Server\DMod\DMod\obj\Debug\DMod.csprojAssemblyReference.cache
-C:\PSOL Unity\Server\Server\DMod\DMod\obj\Debug\DMod.csproj.CoreCompileInputs.cache
-C:\PSOL Unity\Server\Server\DMod\DMod\obj\Debug\DMod.dll
-C:\PSOL Unity\Server\Server\DMod\DMod\obj\Debug\DMod.pdb
