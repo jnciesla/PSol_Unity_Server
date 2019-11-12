@@ -31,6 +31,7 @@ namespace Data.Services
 
         public void RepopGalaxy(bool forceAll = false)
         {
+            Cnsl.Log("Server Repop", true);
             // Get all mobs and count them
             var activeMobs = GetMobs(getDead: true);
             var countOfAllMobs = activeMobs.GroupBy(g => g.MobTypeId)
@@ -92,6 +93,7 @@ namespace Data.Services
                 mob.Y = mob.Y < 0 ? mob.Y * -1 : mob.Y;
                 mob.Name = GenerateName(mob.Special);
             }
+            Cnsl.Finalize("Server Repop", true);
         }
 
         private void AddDeadMob(MobType type)

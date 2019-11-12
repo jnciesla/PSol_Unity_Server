@@ -70,7 +70,6 @@
   <ItemGroup>
     <Compile Include="Clients.cs" />
     <Compile Include="General.cs" />
-    <Compile Include="Cnsl.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Packets.cs" />
     <Compile Include="Program.cs" />

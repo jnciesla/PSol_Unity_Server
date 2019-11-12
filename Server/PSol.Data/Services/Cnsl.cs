@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Server
+namespace Data.Services
 {
-    class Cnsl
+    public static class Cnsl
     {
         public static Dictionary<string, int> buffer = new Dictionary<string, int>();
         private static readonly object _MessageLock = new object();
