@@ -52,6 +52,16 @@ namespace Server
                 TimeSpan.FromSeconds(1),
                 TimeSpan.FromMilliseconds(30000));
 
+            // Wander mobs everys 15 seconds
+            var wanderTimer = new Timer(e =>
+            {
+                if (Globals.Initialized) _mobService.WanderMobs();
+            },
+                null,
+                TimeSpan.FromSeconds(1),
+                TimeSpan.FromMilliseconds(15000));
+
+
             // Save the game every 5 minutes
             var saveTimer = new Timer(e =>
             {
@@ -89,6 +99,7 @@ namespace Server
 
             pulseTimer.Dispose();
             repopTimer.Dispose();
+            wand.Dispose();
             saveTimer.Dispose();
 
         }

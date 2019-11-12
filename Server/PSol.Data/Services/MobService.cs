@@ -121,11 +121,11 @@ namespace Data.Services
 
         public void WanderMobs()
         {
-            // Go through mobs that aren't already wandering and wander them a little within their spawn radius
-            GetMobs().Where(m => m.NavToX == null).ToList().ForEach(m =>
+            // Go through mobs and wander them a little within their spawn radius
+            GetMobs().ToList().ForEach(m =>
             {
                 // 0.2% chance to wander
-                if (rnd.Next(0, 999) > 1) return;
+                if (rnd.Next(0, 999) > 100) return;
                 var negX = rnd.Next(0, 2);
                 var negY = rnd.Next(0, 2);
                 var newX = m.X + rnd.Next(200, 500) * (negX == 0 ? 1f : -1f);
@@ -149,12 +149,14 @@ namespace Data.Services
                     newY = m.MobType.Star.Y - 2 * m.MobType.SpawnRadius;
                 }
 
-                m.NavToX = newX;
-                m.NavToY = newY;
+                m.X = newX;
+                m.Y = newY;
             });
 
+
+            // Let the UI handle this
             // Actually wander them
-            GetMobs().Where(m => m.NavToX != null).ToList().ForEach(m =>
+            /*GetMobs().Where(m => m.NavToX != null).ToList().ForEach(m =>
             {
                 var start = new Vector2(m.X, m.Y);
                 var destination = new Vector2(m.NavToX ?? m.X - 0.1f, m.NavToY ?? m.Y - 0.1f);
@@ -167,7 +169,7 @@ namespace Data.Services
                 if (distance.CompareTo(50F) > 0) return;
                 m.NavToX = null;
                 m.NavToY = null;
-            });
+            });*/
         }
 
         public void CheckAggro()

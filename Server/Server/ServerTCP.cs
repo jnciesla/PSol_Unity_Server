@@ -150,7 +150,7 @@ namespace Server
 
         public static void PreparePulseBroadcast()
         {
-            var look = 2000;
+            var look = 500;
             //Program._combatService.CycleArrays();
             for (var i = 0; i < Constants.MAX_PLAYERS; i++)
             {
@@ -184,8 +184,8 @@ namespace Server
                         var minY = (int)player.Z - look;
                         var maxX = (int)player.X + look;
                         var maxY = (int)player.Z + look;
-                        //buffer.WriteArray(Program._mobService.GetMobs(minX, maxX, minY, maxY).ToArray());
-                        //buffer.WriteArray(Program._combatService.GetCombats((int)player.X, (int)player.Z).ToArray());
+                        buffer.WriteArray(Program._mobService.GetMobs(minX, maxX, minY, maxY).ToArray());
+                        buffer.WriteArray(Program._combatService.GetCombats((int)player.X, (int)player.Z).ToArray());
                         //buffer.WriteArray(Globals.Inventory.Where(m => m.X >= minX && m.X <= maxX && m.Y >= minY && m.Y <= maxY).ToArray());
                         //buffer.WriteArray(Globals.Loot.Where(L => L.X >= minX && L.X <= maxX && L.Y >= minY && L.Y <= maxY && L.Owner == player.Id).ToArray());
                         SendDataTo(i, buffer.ToArray());
