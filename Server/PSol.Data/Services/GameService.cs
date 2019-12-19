@@ -22,7 +22,7 @@ namespace Data.Services
             {
                 _userRepository.SavePlayer(user);
             });
-            _mobService.SaveMobs();
+            //_mobService.SaveMobs();
         }
     }
 }

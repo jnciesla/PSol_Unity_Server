@@ -14,6 +14,7 @@ public enum ClientPackets
     CMovement,
     CMessage,
     CLogin,
+    CRegister,
 }
 
 public enum SystemBytes

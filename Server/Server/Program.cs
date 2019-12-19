@@ -99,7 +99,7 @@ namespace Server
 
             pulseTimer.Dispose();
             repopTimer.Dispose();
-            wand.Dispose();
+            //wand.Dispose();
             saveTimer.Dispose();
 
         }
