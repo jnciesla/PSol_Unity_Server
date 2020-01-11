@@ -152,6 +152,7 @@ namespace Server
             System.Threading.Thread.Sleep(500);
             ServerTCP.SendGalaxy((int)connectionID);
             System.Threading.Thread.Sleep(500);
+            ServerTCP.SendItems((int)connectionID);
             Globals.FullData = true;
             Cnsl.Log(user + @" logged in successfully.");
             player.receiving = true;

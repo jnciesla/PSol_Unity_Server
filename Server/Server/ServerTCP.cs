@@ -104,7 +104,7 @@ namespace Server
             buffer.WriteInteger(player.Weap3Charge);
             buffer.WriteInteger(player.Weap4Charge);
             buffer.WriteInteger(player.Weap5Charge);
-            //buffer.WriteArray(player.Inventory.ToArray());
+            buffer.WriteArray(player.Inventory.ToArray());
             SendDataTo(connectionID, buffer.ToArray());
             buffer.Dispose();
 
