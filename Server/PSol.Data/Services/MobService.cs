@@ -129,6 +129,7 @@ namespace Data.Services
                 var negY = rnd.Next(0, 2);
                 var newX = m.X + rnd.Next(200, 500) * (negX == 0 ? 1f : -1f);
                 var newY = m.Y + rnd.Next(200, 500) * (negY == 0 ? 1f : -1f);
+                Cnsl.Log("NewX: " + newX + " : NewY: " + newY);
 
                 // Make sure they don't wander out of their zone
                 if (newX > m.MobType.Star.X + 2 * m.MobType.SpawnRadius)
