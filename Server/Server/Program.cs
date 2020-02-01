@@ -104,7 +104,7 @@ namespace Server
 
         }
 
-        private static void SaveGame()
+        public static void SaveGame()
         {
             Cnsl.Log("Saving game", true);
             try

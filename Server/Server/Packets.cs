@@ -7,6 +7,7 @@
     SPulse,
     SGalaxy,
     SItems,
+    SInventory
 }
 
 public enum ClientPackets
@@ -15,6 +16,7 @@ public enum ClientPackets
     CMessage,
     CLogin,
     CRegister,
+    CEquip
 }
 
 public enum SystemBytes

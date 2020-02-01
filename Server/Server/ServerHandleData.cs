@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bindings;
 using Data.Services;
@@ -14,12 +15,13 @@ namespace Server
 
         public static void InitializePackets()
         {
-            Cnsl.Debug("Initializing Network Packets",true);
+            Cnsl.Debug("Initializing Network Packets", true);
             packets = new Dictionary<long, Packet_>
             {
                 { (long)ClientPackets.CMovement, PACKET_CLIENTMOVEMENT },
                 { (long)ClientPackets.CMessage, PACKET_CLIENTMESSAGE },
                 { (long)ClientPackets.CLogin, PACKET_LOGIN },
+                { (long)ClientPackets.CEquip, PACKET_EQUIP }
             };
             Cnsl.Finalize("Initializing Network Packets");
         }
@@ -120,6 +122,11 @@ namespace Server
                 var newString = player.Name + ": " + msg.Substring(3);
                 ServerTCP.SendMessage(-1, newString, (int)ChatPackets.Chat);
             }
+            // Admin commands
+            if (msg.StartsWith("*"))
+            {
+               Admin.HandleCommand(connectionID, msg);
+            }
             buffer.Dispose();
         }
 
@@ -143,19 +150,28 @@ namespace Server
             Types.PlayerIds[connectionID] = player.Id;
             Program._userService.ActiveUsers.Add(player);
             ServerTCP.SendToGalaxy((int)connectionID);
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(250);
             ServerTCP.SendIngame((int)connectionID);
-            System.Threading.Thread.Sleep(500);
-            //ServerTCP.SendItems((int)connectionID);
+            System.Threading.Thread.Sleep(250);
+            ServerTCP.SendItems((int)connectionID);
             //ServerTCP.SendNebulae(connectionID);
             ServerTCP.SendMessage(-1, player.Name + " has connected.", (int)ChatPackets.Notification);
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(250);
             ServerTCP.SendGalaxy((int)connectionID);
-            System.Threading.Thread.Sleep(500);
-            ServerTCP.SendItems((int)connectionID);
             Globals.FullData = true;
             Cnsl.Log(user + @" logged in successfully.");
             player.receiving = true;
+        }
+
+        private static void PACKET_EQUIP(long connectionID, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var from = buffer.ReadInteger();
+            var to = buffer.ReadInteger();
+            buffer.Dispose();
+            ItemManager.Equip(connectionID, from, to);
         }
         #endregion
     }

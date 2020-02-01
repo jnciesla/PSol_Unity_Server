@@ -24,8 +24,10 @@ namespace Server
             Cnsl.Finalize("Initializing Game Arrays");
             //Start the Networking
             Cnsl.Debug("Initializing Network", true);
+            Cnsl.Debug("Initializing Status Listener", true);
             ServerHandleData.InitializePackets();
             ServerTCP.InitializeNetwork();
+            ServerTCP.InitializeStatusListener();
             //Load database items
             LoadData();
             var endTime = GetTickCount();

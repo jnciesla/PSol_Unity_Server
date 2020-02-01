@@ -3,7 +3,8 @@
     public class Constants
     {
         public const int MAX_PLAYERS = 100;
-        public const int PORT = 5555;
+        public const int PORT = 23000;
+        public const int STATUS_PORT = 23001;
         public const double LVL_EXPONENT = 1.5;
         public const int MAX_LEVEL = 99;
         public const int LVL_BASE = 1000;

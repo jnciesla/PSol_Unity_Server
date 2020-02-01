@@ -12,6 +12,7 @@ namespace Server
     internal class ServerTCP
     {
         private static TcpListener serverSocket;
+        private static TcpListener statusSocket;
         public static Clients[] Client = new Clients[Constants.MAX_PLAYERS];
 
         public static void InitializeNetwork()
@@ -28,6 +29,28 @@ namespace Server
                 Cnsl.Finalize("Initializing Network", false);
             }
             Console.Title = @"Project Sol Server | " + Constants.PORT;
+        }
+
+        public static void InitializeStatusListener()
+        {
+            try
+            {
+                statusSocket = new TcpListener(IPAddress.Any, Constants.STATUS_PORT);
+                statusSocket.Start();
+                statusSocket.BeginAcceptTcpClient(OnStatusRequest, null);
+                Cnsl.Finalize("Initializing Status Listener");
+            }
+            catch
+            {
+                Cnsl.Finalize("Initializing Status Listener", false);
+            }
+        }
+
+        private static void OnStatusRequest(IAsyncResult result)
+        {
+            statusSocket.EndAcceptTcpClient(result);
+            statusSocket.BeginAcceptTcpClient(OnStatusRequest, null);
+
         }
 
         private static void OnClientConnect(IAsyncResult result)
@@ -107,8 +130,18 @@ namespace Server
             buffer.WriteArray(player.Inventory.ToArray());
             SendDataTo(connectionID, buffer.ToArray());
             buffer.Dispose();
-
         }
+
+        public static void SendInventory(int connectionID)
+        {
+            var buffer = new ByteBuffer();
+            var player = Program._userService.ActiveUsers.Find(p => p.Id == Types.PlayerIds[connectionID]);
+            buffer.WriteLong((long)ServerPackets.SInventory);
+            buffer.WriteArray(player.Inventory.ToArray());
+            SendDataTo(connectionID, buffer.ToArray());
+            buffer.Dispose();
+        }
+
         public static byte[] PlayerData(int connectionID)
         {
             var buffer = new ByteBuffer();
@@ -118,6 +151,7 @@ namespace Server
             buffer.Dispose();
             return data;
         }
+
         public static void SendToGalaxy(int connectionID)
         {
             for (var i = 0; i < Constants.MAX_PLAYERS; i++)
