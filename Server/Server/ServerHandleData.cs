@@ -21,7 +21,8 @@ namespace Server
                 { (long)ClientPackets.CMovement, PACKET_CLIENTMOVEMENT },
                 { (long)ClientPackets.CMessage, PACKET_CLIENTMESSAGE },
                 { (long)ClientPackets.CLogin, PACKET_LOGIN },
-                { (long)ClientPackets.CEquip, PACKET_EQUIP }
+                { (long)ClientPackets.CEquip, PACKET_EQUIP },
+                { (long)ClientPackets.CAttack, PACKET_ATTACK }
             };
             Cnsl.Finalize("Initializing Network Packets");
         }
@@ -125,7 +126,7 @@ namespace Server
             // Admin commands
             if (msg.StartsWith("*"))
             {
-               Admin.HandleCommand(connectionID, msg);
+                Admin.HandleCommand(connectionID, msg);
             }
             buffer.Dispose();
         }
@@ -172,6 +173,21 @@ namespace Server
             var to = buffer.ReadInteger();
             buffer.Dispose();
             ItemManager.Equip(connectionID, from, to);
+        }
+
+        private static void PACKET_ATTACK(long connectionID, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var targetID = buffer.ReadString();
+            var weaponSlot = buffer.ReadInteger();
+            buffer.Dispose();
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Types.PlayerIds[connectionID]);
+            if (player == null) return;
+            var weaponID = player.Inventory.First(w => w.Slot == weaponSlot).ItemId;
+            var weapon = Globals.Items.First(w => w.Id == weaponID);
+            Program._combatService.DoAttack(targetID, player.Id, weapon);
         }
         #endregion
     }

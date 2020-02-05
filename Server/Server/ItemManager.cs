@@ -24,6 +24,22 @@ namespace Server
                 {
                     inv.Slot = to;
                 }
+                // Check special cases
+                // Check for weapon
+                if (to >= 4 && to <= 8 && item.Slot == 22)
+                {
+                    inv.Slot = to;
+                }
+                // Check for muns
+                if (to >= 9 && to <= 11 && item.Slot == 23)
+                {
+                    inv.Slot = to;
+                }
+                // Check for armor
+                if (to >= 13 && to <= 20 && item.Slot == 21)
+                {
+                    inv.Slot = to;
+                }
             }
             ServerTCP.SendInventory((int)connectionID);
         }

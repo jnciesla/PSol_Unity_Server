@@ -185,7 +185,7 @@ namespace Server
         public static void PreparePulseBroadcast()
         {
             var look = 500;
-            //Program._combatService.CycleArrays();
+            Program._combatService.CycleArrays();
             for (var i = 0; i < Constants.MAX_PLAYERS; i++)
             {
                 if (Client[i].socket != null)

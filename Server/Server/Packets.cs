@@ -16,7 +16,8 @@ public enum ClientPackets
     CMessage,
     CLogin,
     CRegister,
-    CEquip
+    CEquip,
+    CAttack
 }
 
 public enum SystemBytes
