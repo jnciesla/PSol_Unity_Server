@@ -19,6 +19,8 @@ namespace DMod.Models
         public string Name { get; set; }
         public bool Special { get; set; }
         [NotMapped]
+        public double Weapon1CD { get; set; } = 0;
+        [NotMapped]
         public string TargettingId { get; set; }
         [NotMapped]
         public float? NavToX { get; set; }

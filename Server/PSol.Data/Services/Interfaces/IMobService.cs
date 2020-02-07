@@ -12,5 +12,8 @@ namespace Data.Services.Interfaces
         void WanderMobs();
         void CheckAggro();
         void DoCombat();
+        Combat DoAttack(string targetId, string attackerId, Item weapon);
+        ICollection<Combat> GetCombats(int x, int y);
+        void CycleArrays();
     }
 }

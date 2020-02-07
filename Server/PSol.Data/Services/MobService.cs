@@ -5,6 +5,7 @@ using Data.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace Data.Services
 {
@@ -14,6 +15,9 @@ namespace Data.Services
         private readonly IMobRepository _mobRepo;
         private readonly IUserService _userService;
         private readonly ICollection<Mob> _mobs;
+        private List<Combat> _pendingCombats;
+        private List<Combat> _readyCombats;
+        private const int CombatDistance = 2000;
 
         public MobService(IMobRepository mobRepo, IUserService userService)
         {
@@ -181,7 +185,7 @@ namespace Data.Services
         private void CheckSingleAggro(Mob m)
         {
             m.TargettingId = null;
-            var players = _userService.ActiveUsers.Where(p => p.X > m.X - 100 && p.X < m.X + 100 && p.Z > m.Y - 100 && p.Z < m.Y + 100).ToList();
+            var players = _userService.ActiveUsers.Where(p => p.X > (m.X - 100) && p.X < (m.X + 100) && p.Z > (m.Y - 100) && p.Z < (m.Y + 100)).ToList();
             if (players.Count == 0) return;
             var ndx = 0;
             if (players.Count > 1)
@@ -207,13 +211,8 @@ namespace Data.Services
                     CheckSingleAggro(m);
                     target = _userService.ActiveUsers.Find(p => p.Id == m.TargettingId);
                 }
-                // Set wander towards mob if they're not too far away from home
-                if (target != null && target.Health > 0 && Math.Abs(target.X - m.MobType.Star.X) < 1000 && Math.Abs(target.Z - m.MobType.Star.Y) < 1000)
-                {
-                    m.NavToX = target.X;
-                    m.NavToY = target.Z;
-                }
-                else
+                // If no target or too far from home, go home
+                if (target == null || Math.Abs(target.X - m.MobType.Star.X) > 1000 || Math.Abs(target.Z - m.MobType.Star.Y) > 1000)
                 {
                     // Wander home
                     m.NavToX = m.MobType.Star.X + rnd.Next(m.MobType.SpawnRadius * -1, m.MobType.SpawnRadius);
@@ -222,10 +221,83 @@ namespace Data.Services
                     return;
                 }
 
+                // Otherwise set wander towards mob if they're not too far away from home
+                if (target.Health > 0)
+                {
+                    m.NavToX = target.X;
+                    m.NavToY = target.Z;
+                }
+
                 // Actually attack
-                var damage = rnd.Next(0, 5);
-                target.Health -= damage;
+                var weap = new Item
+                {
+                    Id = new Guid().ToString(),
+                    Slot = 22,
+                    Damage = 5,
+                    Recharge = 15,
+                    Type = "launcher"
+                };
+                m.Weapon1CD += 25;
+                if (m.Weapon1CD > 2500)
+                {
+                    m.Weapon1CD = 0;
+                    DoAttack(target.Id, m.Id, weap);
+                }
             });
+        }
+        public Combat DoAttack(string targetId, string attackerId, Item weapon)
+        {
+            var mobs = GetMobs().ToList();
+            var combat = new Combat { SourceId = attackerId, TargetId = targetId, Weapon = weapon };
+            var locale = new Vector2(0, 0);
+            var sourcePlayer = _userService.ActiveUsers.Find(p => p?.Id == combat.SourceId);
+            var sourceMob = mobs.Find(m => m.Id == combat.SourceId);
+            var targetMob = mobs.Find(m => m.Id == combat.TargetId);
+            combat.WeaponDamage = rnd.Next(weapon.Damage - (int)Math.Ceiling(weapon.Damage * .2), weapon.Damage + (int)Math.Ceiling(weapon.Damage * .2));
+            // If target was a mob, do combat here. Otherwise do it in calling method cause players are annoying
+            if (targetMob != null)
+            {
+                targetMob.Shield -= combat.WeaponDamage;
+                if (targetMob.Shield < 0)
+                {
+                    targetMob.Health += targetMob.Shield;
+                    targetMob.Shield = 0;
+                }
+
+                if (targetMob.Health <= 0)
+                {
+                    targetMob.Alive = false;
+                    targetMob.KilledDate = DateTime.UtcNow;
+                    combat.TargetId = "dead" + combat.TargetId;
+                }
+
+                combat.TargetX = targetMob.X;
+                combat.TargetY = targetMob.Y;
+            }
+
+            locale = sourcePlayer != null ? new Vector2(sourcePlayer.X, sourcePlayer.Z) : locale;
+            locale = sourceMob != null ? new Vector2(sourceMob.X, sourceMob.Y) : locale;
+            combat.X = (int)locale.X;
+            combat.Y = (int)locale.Y;
+            combat.SourceX = locale.X;
+            combat.SourceY = locale.Y;
+
+            _pendingCombats.Add(combat);
+            return combat;
+        }
+
+        public ICollection<Combat> GetCombats(int x, int y)
+        {
+            var minX = x - CombatDistance;
+            var maxX = x + CombatDistance;
+            var minY = y - CombatDistance;
+            var maxY = y + CombatDistance;
+            return _readyCombats.Where(c => c.X >= minX && c.X <= maxX && c.Y >= minY && c.Y <= maxY).ToList();
+        }
+        public void CycleArrays()
+        {
+            _readyCombats = _pendingCombats;
+            _pendingCombats = new List<Combat>();
         }
 
         public string GenerateName(bool special)

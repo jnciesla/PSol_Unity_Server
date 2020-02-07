@@ -187,7 +187,7 @@ namespace Server
             if (player == null) return;
             var weaponID = player.Inventory.First(w => w.Slot == weaponSlot).ItemId;
             var weapon = Globals.Items.First(w => w.Id == weaponID);
-            Program._combatService.DoAttack(targetID, player.Id, weapon);
+            Program._mobService.DoAttack(targetID, player.Id, weapon);
         }
         #endregion
     }

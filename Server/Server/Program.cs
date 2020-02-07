@@ -15,7 +15,6 @@ namespace Server
         public static IUserService _userService;
         public static IStarService _starService;
         public static IItemService _itemService;
-        public static ICombatService _combatService;
 
         private static void Main()
         {
@@ -27,7 +26,6 @@ namespace Server
             _userService = kernel.Get<IUserService>();
             _starService = kernel.Get<IStarService>();
             _itemService = kernel.Get<IItemService>();
-            _combatService = kernel.Get<ICombatService>();
             General.InitializeServer();
         }
 
@@ -99,7 +97,7 @@ namespace Server
 
             pulseTimer.Dispose();
             repopTimer.Dispose();
-            //wand.Dispose();
+            wanderTimer.Dispose();
             saveTimer.Dispose();
 
         }
