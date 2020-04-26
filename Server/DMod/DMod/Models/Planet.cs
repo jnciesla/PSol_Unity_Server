@@ -16,8 +16,6 @@ namespace DMod.Models
 
         // Inventory
         public virtual ICollection<Inventory> Inventory { get; set; }
-        public List<LootItem> MineTable { get; set; }
-        public List<LootItem> AeroTable { get; set; }
 
         // Position
         public float X { get; set; }

@@ -15,8 +15,8 @@ namespace DMod.Models
         public int MaxSpawned { get; set; }
         public int SpawnTimeMin { get; set; }
         public int SpawnTimeMax { get; set; }
-        public List<LootItem> LootTableStandard { get; set; }
-        public List<LootItem> LootTableSpecial { get; set; }
+        public string LootTable { get; set; }
+
 
         // Position
         public Star Star { get; set; }

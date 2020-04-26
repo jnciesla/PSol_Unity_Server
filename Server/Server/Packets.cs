@@ -7,7 +7,8 @@
     SPulse,
     SGalaxy,
     SItems,
-    SInventory
+    SInventory,
+    SGlobals
 }
 
 public enum ClientPackets

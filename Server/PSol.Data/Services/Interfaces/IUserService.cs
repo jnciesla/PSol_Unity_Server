@@ -11,5 +11,6 @@ namespace Data.Services.Interfaces
         void SavePlayer(User user);
         bool AccountExists(string username);
         bool PasswordOK(string username, string password);
+        void AddExperience(User user, int killLevel, int bonus, bool special);
     }
 }

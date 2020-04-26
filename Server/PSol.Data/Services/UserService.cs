@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Bindings;
 using DMod.Models;
 using Data.Repositories.Interfaces;
 using Data.Services.Interfaces;
@@ -26,6 +27,37 @@ namespace Data.Services
             _userRepo.SavePlayer(user);
         }
 
+        public void AddExperience(User user, int killLevel, int bonus, bool special)
+        {
+            var nextLevel = Math.Floor(Constants.LVL_BASE * Math.Pow(user.Level, Constants.LVL_EXPONENT));
+            float offset = 1;
+            if (killLevel > user.Level)
+            {
+                offset = 1 + 0.05f * (killLevel - user.Level);
+            }
+            else if (killLevel < user.Level)
+            {
+                offset = 1.0f - (float)(user.Level - killLevel) / 10;
+                if (user.Level - killLevel >= 10) offset = 0; //Don't give xp if the level difference is greater than 10.
+            }
+
+            var amount = (killLevel * Constants.EXP_MULT + bonus) * offset;
+
+            if (special) amount = amount * 1.5f;
+            user.Exp += (int)Math.Ceiling(amount);
+
+            if (user.Exp >= nextLevel)
+            {
+                if (user.Level < Constants.MAX_LEVEL)
+                {
+                    user.Level++;
+                }
+                else
+                {
+
+                }
+            }
+        }
 
         public User RegisterUser(string username, string password)
         {

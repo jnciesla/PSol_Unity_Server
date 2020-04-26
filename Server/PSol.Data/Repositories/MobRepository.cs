@@ -23,7 +23,7 @@ namespace Data.Repositories
 
         public ICollection<Mob> GetAllMobs()
         {
-            return _context.Mobs.Include(i => i.MobType).Include(i => i.MobType.Star).Include(i => i.MobType.LootTableStandard).Include(i => i.MobType.LootTableSpecial).ToList();
+            return _context.Mobs.Include(i => i.MobType).Include(i => i.MobType.Star).ToList();
         }
 
         public Mob Add(Mob mob)
@@ -50,7 +50,7 @@ namespace Data.Repositories
 
         public ICollection<MobType> GetAllMobTypes()
         {
-            return _context.MobTypes.Include(i => i.Star).Include(i => i.LootTableStandard).Include(i => i.LootTableSpecial).ToList();
+            return _context.MobTypes.Include(i => i.Star).ToList();
         }
     }
 }

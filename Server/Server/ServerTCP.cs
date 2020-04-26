@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Bindings;
+using Data;
 using Data.Services;
 
 namespace Server
@@ -214,6 +215,8 @@ namespace Server
                             buffer.WriteInteger(p.MaxHealth);
                             buffer.WriteInteger(p.Shield);
                             buffer.WriteInteger(p.MaxShield);
+                            buffer.WriteInteger(p.Exp);
+                            buffer.WriteInteger(p.Level);
                             buffer.WriteBytes(BitConverter.GetBytes(Program._userService.ActiveUsers[index].inGame));
                         });
                         var minX = (int)player.X - look;
@@ -222,8 +225,7 @@ namespace Server
                         var maxY = (int)player.Z + look;
                         buffer.WriteArray(Program._mobService.GetMobs(minX, maxX, minY, maxY).ToArray());
                         buffer.WriteArray(Program._mobService.GetCombats((int)player.X, (int)player.Z).ToArray());
-                        //buffer.WriteArray(Globals.Inventory.Where(m => m.X >= minX && m.X <= maxX && m.Y >= minY && m.Y <= maxY).ToArray());
-                        //buffer.WriteArray(Globals.Loot.Where(L => L.X >= minX && L.X <= maxX && L.Y >= minY && L.Y <= maxY && L.Owner == player.Id).ToArray());
+                        buffer.WriteArray(Globals.Inventory.Where(m => m.X >= minX && m.X <= maxX && m.Y >= minY && m.Y <= maxY).ToArray());
                         SendDataTo(i, buffer.ToArray());
                         buffer.Dispose();
                     }
@@ -236,6 +238,17 @@ namespace Server
             var buffer = new ByteBuffer();
             buffer.WriteLong((long)ServerPackets.SGalaxy);
             buffer.WriteArray(Globals.Galaxy.ToArray());
+            SendDataTo(index, buffer.ToArray());
+            buffer.Dispose();
+        }
+
+        public static void SendGlobals(int index)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteLong((long)ServerPackets.SGlobals);
+            buffer.WriteInteger(Constants.LVL_BASE);
+            buffer.WriteInteger(Constants.MAX_LEVEL);
+            buffer.WriteFloat(Constants.LVL_EXPONENT);
             SendDataTo(index, buffer.ToArray());
             buffer.Dispose();
         }

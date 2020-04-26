@@ -51,9 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Globals.cs" />
     <Compile Include="Migrations\201812100630040_Initial.cs" />
     <Compile Include="Migrations\201812100630040_Initial.Designer.cs">
       <DependentUpon>201812100630040_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004251901237_Loot changes.cs" />
+    <Compile Include="Migrations\202004251901237_Loot changes.Designer.cs">
+      <DependentUpon>202004251901237_Loot changes.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PSolDataContext.cs" />
@@ -85,6 +90,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201812100630040_Initial.resx">
       <DependentUpon>201812100630040_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004251901237_Loot changes.resx">
+      <DependentUpon>202004251901237_Loot changes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

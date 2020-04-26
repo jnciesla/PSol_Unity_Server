@@ -17,8 +17,8 @@
         public bool Stack { get; set; } = false;        // Stackable
         public int Level { get; set; } = 0;             // Minimum level to use/drop item
         public int Slot { get; set; } = 0;              // Slot item is equippable to.  Variable-slot items use first slot available (7, for weapons)
-        public int Chance { get; set; } = 0;            // Chance to drop.  0 = not droppable.
-
+        public int Acquisition { get; set; } = 0;       // Acquisition mode. 0000000* drop, 000000*0 mine, 00000*00 harvest, 0000*000 craft, 000*0000 special
+                                                        // ((VAR >> X) & 1) == 1) check X bit is set
         // Attributes
         public int Hull { get; set; } = 0;              // Health
         public int Shield { get; set; } = 0;            // Shield

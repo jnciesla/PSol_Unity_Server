@@ -4,6 +4,7 @@ using Data.Repositories.Interfaces;
 using Data.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 
@@ -269,8 +270,10 @@ namespace Data.Services
                     targetMob.Alive = false;
                     targetMob.KilledDate = DateTime.UtcNow;
                     combat.TargetId = "dead" + combat.TargetId;
+                    _userService.AddExperience(sourcePlayer, targetMob.MobType.Level, targetMob.MobType.BonusExp, targetMob.Special);
+                    var owners = new[] { sourcePlayer };
+                    GenerateLoot(owners, targetMob);
                 }
-
                 combat.TargetX = targetMob.X;
                 combat.TargetY = targetMob.Y;
             }
@@ -294,10 +297,60 @@ namespace Data.Services
             var maxY = y + CombatDistance;
             return _readyCombats.Where(c => c.X >= minX && c.X <= maxX && c.Y >= minY && c.Y <= maxY).ToList();
         }
+
         public void CycleArrays()
         {
             _readyCombats = _pendingCombats;
             _pendingCombats = new List<Combat>();
+        }
+
+        public void GenerateLoot(User[] owners, Mob Mob)
+        {
+            var MT = Mob.MobType;
+            var minDrop = (int)Math.Floor(1 + MT.Level / 20.0f);
+            var maxDrop = (int)Math.Floor(3 + MT.Level / 11.0f);
+            var lootDictionary = new Dictionary<Tuple<int, int>, Item>();
+            var value = 0;
+            var lootValue = (MT.Level + 1) ^ 2 + 25;
+            var stacks = 0;
+            if (Mob.Special)
+            {
+                minDrop = (int)Math.Round(minDrop * 1.5);
+                maxDrop += 2;
+            }
+            var drop = rnd.Next(minDrop, maxDrop);
+            // ((i.Chance >> X) & 1) == 1) check X bit is high
+            var lootItems = Globals.Items.Where(i => i.Level > MT.Level - 15 && i.Level < MT.Level + 5 && ((i.Acquisition >> 0) & 1) == 1);
+            foreach (var loot in lootItems)
+            {
+                lootDictionary.Add(new Tuple<int, int>(value, value + loot.Cost + 1), loot);
+                value += loot.Cost;
+                if (loot.Stack) stacks++;
+            }
+            var stackValue = lootValue / stacks;
+            for (var i = 0; i < drop; i++)
+            {
+                var rand = rnd.Next(value);
+                var lootItem = lootDictionary.First(m => m.Key.Item1 < rand && m.Key.Item2 > rand).Value;
+                var qty = 1;
+                if (lootItem.Stack)
+                {
+                    var itemVal = stackValue / lootItem.Cost;
+                    qty = rnd.Next(itemVal);
+                }
+                var newLoot = new Inventory
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Dropped = DateTime.UtcNow,
+                    ItemId = lootItem.Id,
+                    Quantity = qty,
+                    Slot = 100,
+                    UserId = owners[0].Id,
+                    X = Mob.X,
+                    Y = Mob.Y
+                };
+                Globals.Inventory.Add(newLoot);
+            }
         }
 
         public string GenerateName(bool special)

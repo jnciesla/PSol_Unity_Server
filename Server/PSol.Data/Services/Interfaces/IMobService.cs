@@ -10,6 +10,7 @@ namespace Data.Services.Interfaces
         void RepopGalaxy(bool forceAll = false);
         void SaveMobs();
         void WanderMobs();
+        void GenerateLoot(User[] owners, Mob mob);
         void CheckAggro();
         void DoCombat();
         Combat DoAttack(string targetId, string attackerId, Item weapon);

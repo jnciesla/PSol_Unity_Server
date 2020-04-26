@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bindings;
+using Data;
 using Data.Services;
 
 namespace Server
@@ -150,6 +151,8 @@ namespace Server
             player.inGame = true;
             Types.PlayerIds[connectionID] = player.Id;
             Program._userService.ActiveUsers.Add(player);
+            ServerTCP.SendGlobals((int)connectionID);
+            System.Threading.Thread.Sleep(250);
             ServerTCP.SendToGalaxy((int)connectionID);
             System.Threading.Thread.Sleep(250);
             ServerTCP.SendIngame((int)connectionID);
