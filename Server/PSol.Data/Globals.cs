@@ -14,7 +14,10 @@ namespace Data
 
         public static ICollection<Star> Galaxy;
         public static ICollection<Item> Items;
-        public static ICollection<Inventory> Inventory = new List<Inventory>();
+        public static ICollection<Recipe> Recipes;
+        public static ICollection<Loot> Loot = new List<Loot>();
         public static List<Nebula> Nebulae = new List<Nebula>();
+        public static string[] PlayerIds = new string[Constants.MAX_PLAYERS];
+        public static Dictionary<string, string> RecipeHash = new Dictionary<string, string>();
     }
 }

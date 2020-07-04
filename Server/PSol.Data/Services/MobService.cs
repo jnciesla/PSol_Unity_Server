@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 
 namespace Data.Services
@@ -31,6 +32,11 @@ namespace Data.Services
         {
             return getDead ? _mobs.Where(m => m.X >= minX && m.X <= maxX && m.Y >= minY && m.Y <= maxY).ToList()
                 : _mobs.Where(m => m.X >= minX && m.X <= maxX && m.Y >= minY && m.Y <= maxY && m.Alive).ToList();
+        }
+
+        public Mob GetMob(string ID)
+        {
+            return _mobs.First(m => m.Id == ID);
         }
 
         public void RepopGalaxy(bool forceAll = false)
@@ -134,7 +140,6 @@ namespace Data.Services
                 var negY = rnd.Next(0, 2);
                 var newX = m.X + rnd.Next(200, 500) * (negX == 0 ? 1f : -1f);
                 var newY = m.Y + rnd.Next(200, 500) * (negY == 0 ? 1f : -1f);
-                Cnsl.Log("NewX: " + newX + " : NewY: " + newY);
 
                 // Make sure they don't wander out of their zone
                 if (newX > m.MobType.Star.X + 2 * m.MobType.SpawnRadius)
@@ -157,24 +162,6 @@ namespace Data.Services
                 m.X = newX;
                 m.Y = newY;
             });
-
-
-            // Let the UI handle this
-            // Actually wander them
-            /*GetMobs().Where(m => m.NavToX != null).ToList().ForEach(m =>
-            {
-                var start = new Vector2(m.X, m.Y);
-                var destination = new Vector2(m.NavToX ?? m.X - 0.1f, m.NavToY ?? m.Y - 0.1f);
-                var direction = Vector2.Normalize(destination - start);
-                var distance = Vector2.Distance(start, destination);
-                m.Rotation = (float)Math.Atan2(direction.Y, direction.X) + MathHelper.ToRadians(90);
-
-                m.X += direction.X * 4f;
-                m.Y += direction.Y * 4f;
-                if (distance.CompareTo(50F) > 0) return;
-                m.NavToX = null;
-                m.NavToY = null;
-            });*/
         }
 
         public void CheckAggro()
@@ -255,6 +242,7 @@ namespace Data.Services
             var sourceMob = mobs.Find(m => m.Id == combat.SourceId);
             var targetMob = mobs.Find(m => m.Id == combat.TargetId);
             combat.WeaponDamage = rnd.Next(weapon.Damage - (int)Math.Ceiling(weapon.Damage * .2), weapon.Damage + (int)Math.Ceiling(weapon.Damage * .2));
+            
             // If target was a mob, do combat here. Otherwise do it in calling method cause players are annoying
             if (targetMob != null)
             {
@@ -304,53 +292,76 @@ namespace Data.Services
             _pendingCombats = new List<Combat>();
         }
 
-        public void GenerateLoot(User[] owners, Mob Mob)
+        public void GenerateLoot(User[] owners, Mob mob)
         {
-            var MT = Mob.MobType;
-            var minDrop = (int)Math.Floor(1 + MT.Level / 20.0f);
-            var maxDrop = (int)Math.Floor(3 + MT.Level / 11.0f);
-            var lootDictionary = new Dictionary<Tuple<int, int>, Item>();
-            var value = 0;
-            var lootValue = (MT.Level + 1) ^ 2 + 25;
+            var mt = mob.MobType;
+            var minDrop = (int)Math.Floor(1 + mt.Level / 20.0f);
+            var maxDrop = (int)Math.Floor(3 + mt.Level / 11.0f);
+            var lootDictionary = new Dictionary<Tuple<double, double>, Item>();
+            var weight = 0.0d;
+            var lootCredits = (mt.Level + 1) ^ 2 + 25;
             var stacks = 0;
-            if (Mob.Special)
+            var lootContainer = new Loot
+            {
+                Dropped = DateTime.UtcNow,
+                Credits = rnd.Next(lootCredits),
+                Id = Guid.NewGuid().ToString(),
+                Owner = owners[0].Id,
+                Type = 0,
+                X = mob.X,
+                Y = mob.Y,
+                Items = new List<Inventory>()
+            };
+            if (mob.Special)
             {
                 minDrop = (int)Math.Round(minDrop * 1.5);
                 maxDrop += 2;
+                lootContainer.Type = 1;
+                lootContainer.Credits = (int)Math.Round(lootContainer.Credits * 1.25);
             }
+
             var drop = rnd.Next(minDrop, maxDrop);
-            // ((i.Chance >> X) & 1) == 1) check X bit is high
-            var lootItems = Globals.Items.Where(i => i.Level > MT.Level - 15 && i.Level < MT.Level + 5 && ((i.Acquisition >> 0) & 1) == 1);
-            foreach (var loot in lootItems)
+            // ((i.Acquisition >> X) & 1) == 1) check X bit is high
+            var lootItems = Globals.Items.Where(i =>
+                i.Level > mt.Level - 15 && i.Level < mt.Level + 5 && ((i.Acquisition >> 0) & 1) == 1);
+            var enumerable = lootItems as Item[] ?? lootItems.ToArray();
+            var value = enumerable.Sum(loot => loot.Cost);
+            foreach (var loot in enumerable)
             {
-                lootDictionary.Add(new Tuple<int, int>(value, value + loot.Cost + 1), loot);
-                value += loot.Cost;
+                var relWeight = 1 / ((double)loot.Cost / (value - loot.Cost));
+                lootDictionary.Add(new Tuple<double, double>(weight, weight + relWeight), loot);
+                weight += relWeight;
                 if (loot.Stack) stacks++;
             }
-            var stackValue = lootValue / stacks;
+
+            var stackValue = 0;
+            if (stacks > 0) stackValue = lootCredits / stacks;
             for (var i = 0; i < drop; i++)
             {
-                var rand = rnd.Next(value);
+                var rand = rnd.NextDouble() * weight;
                 var lootItem = lootDictionary.First(m => m.Key.Item1 < rand && m.Key.Item2 > rand).Value;
                 var qty = 1;
                 if (lootItem.Stack)
                 {
-                    var itemVal = stackValue / lootItem.Cost;
-                    qty = rnd.Next(itemVal);
+                    var itemVal = (int)Math.Ceiling(stackValue / (float)lootItem.Cost) + 1;
+                    qty = rnd.Next(1, itemVal);
                 }
+
                 var newLoot = new Inventory
                 {
                     Id = Guid.NewGuid().ToString(),
                     Dropped = DateTime.UtcNow,
                     ItemId = lootItem.Id,
                     Quantity = qty,
-                    Slot = 100,
+                    Slot = i,
                     UserId = owners[0].Id,
-                    X = Mob.X,
-                    Y = Mob.Y
+                    X = mob.X,
+                    Y = mob.Y
                 };
-                Globals.Inventory.Add(newLoot);
+                lootContainer.Items.Add(newLoot);
             }
+
+            Globals.Loot.Add(lootContainer);
         }
 
         public string GenerateName(bool special)

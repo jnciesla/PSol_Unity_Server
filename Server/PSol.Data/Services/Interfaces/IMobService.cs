@@ -15,6 +15,7 @@ namespace Data.Services.Interfaces
         void DoCombat();
         Combat DoAttack(string targetId, string attackerId, Item weapon);
         ICollection<Combat> GetCombats(int x, int y);
+        Mob GetMob(string ID);
         void CycleArrays();
     }
 }

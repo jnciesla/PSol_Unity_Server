@@ -20,6 +20,11 @@ namespace Data.Repositories
             return _context.Items.ToList();
         }
 
+        public ICollection<Recipe> LoadRecipes()
+        {
+            return _context.Recipes.ToList();
+        }
+
         public void Dispose()
         {
             _context?.Dispose();

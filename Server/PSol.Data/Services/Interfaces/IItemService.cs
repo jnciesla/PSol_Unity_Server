@@ -6,5 +6,7 @@ namespace Data.Services.Interfaces
     public interface IItemService
     {
         ICollection<Item> LoadItems();
+        ICollection<Recipe> LoadRecipes();
+        void RemoveLoot();
     }
 }

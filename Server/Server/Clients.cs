@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using Bindings;
+using Data;
 using Data.Services;
 using DMod.Models;
 
@@ -52,17 +53,17 @@ namespace Server
         public void CloseSocket(int index)
         {
             Cnsl.Log("Connection from " + ip + " has been terminated");
-            var player = Program._userService.ActiveUsers.Find(p => p.Id == Types.PlayerIds[index]);
+            var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[index]);
             if (player != null)
             {
-                ServerTCP.SendMessage(-1,player.Name + @" has disconnected.", (int)ChatPackets.Notification);
+                ServerTcp.SendMessage(-1,player.Name + @" has disconnected.", (int)ChatPackets.Notification);
                 player.inGame = false;
                 player.receiving = false;
             }
             Program._gameService.SaveGame(new List<User> { player });
             socket.Close();
             socket = null;
-            Types.PlayerIds[index] = null;
+            Globals.PlayerIds[index] = null;
             Program._userService.ActiveUsers.Remove(player);
         }
     }

@@ -48,14 +48,12 @@ namespace Data.Migrations
                 Name = "Vyt I",
                 Class = "Terrestrial",
                 Belligerence = "Moderate",
-                Orbit = 600,
+                Orbit = 200,
                 Sprite = 2,
-                X = 1600,
-                Y = 1600,
+                X = 1200,
+                Y = 1200,
                 Color = "1"
             });
-
-            context.SaveChanges();
 
             context.MobTypes.AddOrUpdate(new MobType
             {
@@ -64,7 +62,7 @@ namespace Data.Migrations
                 Credits = 0,
                 Level = 1,
                 MaxHealth = 100,
-                MaxShield = 0,
+                MaxShield = 100,
                 MaxSpawned = 4,
                 Name = "Vyt Scout",
                 SpawnRadius = 100,
@@ -81,7 +79,7 @@ namespace Data.Migrations
                 Description = "The very first item added to the game.",
                 Type = "Biospecimen",
                 Image = 1,
-                Color = "1",
+                Color = "255255255",
                 Mass = 1,
                 Cost = 500,
                 Stack = true,
@@ -93,9 +91,9 @@ namespace Data.Migrations
                 Id = "a53edcf0-1105-4edf-9c30-217279c3d286",
                 Name = "Laser MK1",
                 Description = "Basic laser",
-                Type = "Weapon",
+                Type = "Laser",
                 Image = 1,
-                Color = "1",
+                Color = "255255255",
                 Mass = 1,
                 Cost = 500,
                 Stack = true,
@@ -161,7 +159,7 @@ namespace Data.Migrations
                 Description = "Repair materials salvaged from enemy craft.  This can be used to repair damage to your own ship.",
                 Type = "Consumable",
                 Image = 4,
-                Color = "0",
+                Color = "255255255",
                 Mass = 1,
                 Cost = 2,
                 Stack = true

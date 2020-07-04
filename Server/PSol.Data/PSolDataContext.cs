@@ -13,6 +13,7 @@ namespace Data
         public DbSet<Mob> Mobs { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
 
         public PSolDataContext() : base("PSolDataConnection")
         {
@@ -23,7 +24,6 @@ namespace Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Properties<string>().Configure(c => c.HasMaxLength(255));
-            
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Id)
@@ -71,6 +71,10 @@ namespace Data
 
             modelBuilder.Entity<Inventory>()
                 .Property(i => i.ItemId)
+                .HasMaxLength(MaxIdLength);
+
+            modelBuilder.Entity<Recipe>()
+                .Property(r => r.ID)
                 .HasMaxLength(MaxIdLength);
         }
     }

@@ -8,7 +8,8 @@
     SGalaxy,
     SItems,
     SInventory,
-    SGlobals
+    SGlobals,
+    SRecipes
 }
 
 public enum ClientPackets
@@ -18,7 +19,13 @@ public enum ClientPackets
     CLogin,
     CRegister,
     CEquip,
-    CAttack
+    CAttack,
+    CLoot,
+    CShopBuy,
+    CShopSell,
+    CDischarge,
+    CLog,
+    CManufacture
 }
 
 public enum SystemBytes

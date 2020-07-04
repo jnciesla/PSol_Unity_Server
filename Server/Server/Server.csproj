@@ -72,7 +72,6 @@
     <Compile Include="Clients.cs" />
     <Compile Include="General.cs" />
     <Compile Include="ItemManager.cs" />
-    <Compile Include="Packets.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerHandleData.cs" />

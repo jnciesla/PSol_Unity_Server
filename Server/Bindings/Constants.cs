@@ -1,4 +1,6 @@
-﻿namespace Bindings
+﻿using System;
+
+namespace Bindings
 {
     public class Constants
     {
@@ -16,5 +18,8 @@
         public const int MAP_SIZE_HEIGHT = 102500;
         public const int PLAY_AREA_WIDTH = 100010;
         public const int PLAY_AREA_HEIGHT = 100010;
+
+        public const int LOOT_DWELL = 1;
+        public const int MAX_STACK = 250;
     }
 }

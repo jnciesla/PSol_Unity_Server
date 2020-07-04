@@ -36,16 +36,30 @@ namespace Server
 
             var pulseTimer = new Timer(e =>
             {
-                if (Globals.Initialized) ServerTCP.PreparePulseBroadcast();
+                if (Globals.Initialized) ServerTcp.PreparePulseBroadcast();
             },
                 null,
                 TimeSpan.FromSeconds(1),
                 TimeSpan.FromMilliseconds(25));
 
+            // Recharge systems
+            var rechargeTimer = new Timer(e =>
+            {
+                if (Globals.Initialized)
+                {
+                    _userService.RechargeSystems();
+                }
+            },
+            null,
+            TimeSpan.FromSeconds(1),
+            TimeSpan.FromSeconds(1));
+
             // Try a repop every 30 seconds
+            // Remove old loots
             var repopTimer = new Timer(e =>
             {
                 if (Globals.Initialized) _mobService.RepopGalaxy();
+                if (Globals.Initialized) _itemService.RemoveLoot();
             },
                 null,
                 TimeSpan.FromSeconds(1),

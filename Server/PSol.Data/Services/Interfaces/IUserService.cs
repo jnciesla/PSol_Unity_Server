@@ -12,5 +12,6 @@ namespace Data.Services.Interfaces
         bool AccountExists(string username);
         bool PasswordOK(string username, string password);
         void AddExperience(User user, int killLevel, int bonus, bool special);
+        void RechargeSystems();
     }
 }

@@ -9,76 +9,83 @@ namespace Server
 {
     public class ServerHandleData
     {
-        private delegate void Packet_(long connectionID, byte[] data);
+        private delegate void Packet(long connectionId, byte[] data);
 
-        private static Dictionary<long, Packet_> packets;
+        private static Dictionary<long, Packet> packets;
         private static long pLength;
 
         public static void InitializePackets()
         {
             Cnsl.Debug("Initializing Network Packets", true);
-            packets = new Dictionary<long, Packet_>
+            packets = new Dictionary<long, Packet>
             {
                 { (long)ClientPackets.CMovement, PACKET_CLIENTMOVEMENT },
                 { (long)ClientPackets.CMessage, PACKET_CLIENTMESSAGE },
                 { (long)ClientPackets.CLogin, PACKET_LOGIN },
                 { (long)ClientPackets.CEquip, PACKET_EQUIP },
-                { (long)ClientPackets.CAttack, PACKET_ATTACK }
+                { (long)ClientPackets.CAttack, PACKET_ATTACK },
+                { (long)ClientPackets.CLoot, PACKET_LOOT },
+                { (long)ClientPackets.CShopBuy, PACKET_PURCHASE },
+                { (long)ClientPackets.CShopSell, PACKET_SELL },
+                { (long)ClientPackets.CDischarge, PACKET_DISCHARGE },
+                { (long)ClientPackets.CLog, PACKET_LOGERROR },
+                { (long)ClientPackets.CManufacture, PACKET_MANUFACTURE },
+
             };
             Cnsl.Finalize("Initializing Network Packets");
         }
 
-        public static void HandleData(long connectionID, byte[] data)
+        public static void HandleData(long connectionId, byte[] data)
         {
-            var Buffer = (byte[])data.Clone();
+            var buffer = (byte[])data.Clone();
 
-            if (ServerTCP.Client[connectionID].playerBuffer == null)
+            if (ServerTcp.Client[connectionId].playerBuffer == null)
             {
-                ServerTCP.Client[connectionID].playerBuffer = new ByteBuffer();
+                ServerTcp.Client[connectionId].playerBuffer = new ByteBuffer();
             }
-            ServerTCP.Client[connectionID].playerBuffer.WriteBytes(Buffer);
+            ServerTcp.Client[connectionId].playerBuffer.WriteBytes(buffer);
 
-            if (ServerTCP.Client[connectionID].playerBuffer.Count() == 0)
+            if (ServerTcp.Client[connectionId].playerBuffer.Count() == 0)
             {
-                ServerTCP.Client[connectionID].playerBuffer.Clear();
+                ServerTcp.Client[connectionId].playerBuffer.Clear();
                 return;
             }
 
-            if (ServerTCP.Client[connectionID].playerBuffer.Length() >= 8)
+            if (ServerTcp.Client[connectionId].playerBuffer.Length() >= 8)
             {
-                pLength = ServerTCP.Client[connectionID].playerBuffer.ReadLong(false);
+                pLength = ServerTcp.Client[connectionId].playerBuffer.ReadLong(false);
                 if (pLength <= 0)
                 {
-                    ServerTCP.Client[connectionID].playerBuffer.Clear();
+                    ServerTcp.Client[connectionId].playerBuffer.Clear();
                     return;
                 }
             }
 
-            while (pLength > 0 & pLength <= ServerTCP.Client[connectionID].playerBuffer.Length() - 8)
+            while (pLength > 0 & pLength <= ServerTcp.Client[connectionId].playerBuffer.Length() - 8)
             {
-                if (pLength <= ServerTCP.Client[connectionID].playerBuffer.Length() - 8)
+                if (pLength <= ServerTcp.Client[connectionId].playerBuffer.Length() - 8)
                 {
-                    ServerTCP.Client[connectionID].playerBuffer.ReadLong();
-                    data = ServerTCP.Client[connectionID].playerBuffer.ReadBytes((int)pLength);
-                    HandleDataPackets(connectionID, data);
+                    ServerTcp.Client[connectionId].playerBuffer.ReadLong();
+                    data = ServerTcp.Client[connectionId].playerBuffer.ReadBytes((int)pLength);
+                    HandleDataPackets(connectionId, data);
                 }
 
                 pLength = 0;
 
-                if (ServerTCP.Client[connectionID].playerBuffer.Length() >= 8)
+                if (ServerTcp.Client[connectionId].playerBuffer.Length() >= 8)
                 {
-                    pLength = ServerTCP.Client[connectionID].playerBuffer.ReadLong(false);
+                    pLength = ServerTcp.Client[connectionId].playerBuffer.ReadLong(false);
 
                     if (pLength < 0)
                     {
-                        ServerTCP.Client[connectionID].playerBuffer.Clear();
+                        ServerTcp.Client[connectionId].playerBuffer.Clear();
                         return;
                     }
                 }
             }
         }
 
-        private static void HandleDataPackets(long connectionID, byte[] data)
+        private static void HandleDataPackets(long connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -87,12 +94,12 @@ namespace Server
 
             if (packets.TryGetValue(packetIdentifier, out var packet))
             {
-                packet.Invoke(connectionID, data);
+                packet.Invoke(connectionId, data);
             }
         }
         #region Handle packets
 
-        private static void PACKET_CLIENTMOVEMENT(long connectionID, byte[] data)
+        private static void PACKET_CLIENTMOVEMENT(long connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -103,7 +110,7 @@ namespace Server
             var Z = buffer.ReadFloat();     // Roll
             var M = buffer.ReadInteger();   // Moving
             buffer.Dispose();
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Types.PlayerIds[connectionID]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
             if (player == null) return;
             player.X = x;
             player.Z = z;
@@ -112,7 +119,7 @@ namespace Server
             player.M = M;
         }
 
-        private static void PACKET_CLIENTMESSAGE(long connectionID, byte[] data)
+        private static void PACKET_CLIENTMESSAGE(long connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -120,19 +127,19 @@ namespace Server
             var msg = buffer.ReadString();
             if (msg.ToLower().StartsWith("/c"))
             {
-                var player = Program._userService.ActiveUsers.Find(p => p.Id == Types.PlayerIds[connectionID]);
+                var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[connectionId]);
                 var newString = player.Name + ": " + msg.Substring(3);
-                ServerTCP.SendMessage(-1, newString, (int)ChatPackets.Chat);
+                ServerTcp.SendMessage(-1, newString, (int)ChatPackets.Chat);
             }
             // Admin commands
             if (msg.StartsWith("*"))
             {
-                Admin.HandleCommand(connectionID, msg);
+                Admin.HandleCommand(connectionId, msg);
             }
             buffer.Dispose();
         }
 
-        private static void PACKET_LOGIN(long connectionID, byte[] data)
+        private static void PACKET_LOGIN(long connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -142,32 +149,36 @@ namespace Server
             var validate = Program._userService.PasswordOK(user, pass);
             if (!validate)
             {
-                ServerTCP.SendSystemByte((int)connectionID, SystemBytes.SysInvPass);
+                ServerTcp.SendSystemByte((int)connectionId, SystemBytes.SysInvPass);
                 return;
             }
             buffer.Dispose();
 
             var player = Program._userService.LoadPlayer(user);
             player.inGame = true;
-            Types.PlayerIds[connectionID] = player.Id;
+            Globals.PlayerIds[connectionId] = player.Id;
             Program._userService.ActiveUsers.Add(player);
-            ServerTCP.SendGlobals((int)connectionID);
+            ServerTcp.SendGlobals((int)connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTCP.SendToGalaxy((int)connectionID);
+            ServerTcp.SendItems((int)connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTCP.SendIngame((int)connectionID);
+            ServerTcp.SendToGalaxy((int)connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTCP.SendItems((int)connectionID);
+            ServerTcp.SendIngame((int)connectionId);
+            System.Threading.Thread.Sleep(250);
+            ServerTcp.SendInventory((int)connectionId);
             //ServerTCP.SendNebulae(connectionID);
-            ServerTCP.SendMessage(-1, player.Name + " has connected.", (int)ChatPackets.Notification);
+            ServerTcp.SendMessage(-1, player.Name + " has connected.", (int)ChatPackets.Notification);
             System.Threading.Thread.Sleep(250);
-            ServerTCP.SendGalaxy((int)connectionID);
+            ServerTcp.SendGalaxy((int)connectionId);
+            System.Threading.Thread.Sleep(250);
+            ServerTcp.SendRecipes((int)connectionId);
             Globals.FullData = true;
             Cnsl.Log(user + @" logged in successfully.");
             player.receiving = true;
         }
 
-        private static void PACKET_EQUIP(long connectionID, byte[] data)
+        private static void PACKET_EQUIP(long connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -175,22 +186,109 @@ namespace Server
             var from = buffer.ReadInteger();
             var to = buffer.ReadInteger();
             buffer.Dispose();
-            ItemManager.Equip(connectionID, from, to);
+            ItemManager.Equip(connectionId, from, to);
         }
 
-        private static void PACKET_ATTACK(long connectionID, byte[] data)
+        private static void PACKET_LOOT(long connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             buffer.ReadLong();
-            var targetID = buffer.ReadString();
-            var weaponSlot = buffer.ReadInteger();
+            var lootId = buffer.ReadString();
+            var slot = buffer.ReadInteger();
             buffer.Dispose();
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Types.PlayerIds[connectionID]);
+            ItemManager.CollectLoot(connectionId, lootId, slot);
+        }
+
+        private static void PACKET_PURCHASE(long connectionId, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var shopId = buffer.ReadString();
+            var slot = buffer.ReadInteger();
+            var qty = buffer.ReadInteger();
+            buffer.Dispose();
+            ItemManager.PurchaseItem(connectionId, shopId, slot, qty);
+        }
+
+        private static void PACKET_SELL(long connectionId, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var slot = buffer.ReadInteger();
+            var qty = buffer.ReadInteger();
+            buffer.Dispose();
+            ItemManager.SellItem(connectionId, slot, qty);
+        }
+
+        private static void PACKET_ATTACK(long connectionId, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var targetId = buffer.ReadString();
+            var weaponSlot = buffer.ReadInteger();
+            var ammo = buffer.ReadInteger();
+            buffer.Dispose();
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
             if (player == null) return;
-            var weaponID = player.Inventory.First(w => w.Slot == weaponSlot).ItemId;
-            var weapon = Globals.Items.First(w => w.Id == weaponID);
-            Program._mobService.DoAttack(targetID, player.Id, weapon);
+            var weaponId = player.Inventory.First(w => w.Slot == weaponSlot).ItemId;
+            var weapon = Globals.Items.First(w => w.Id == weaponId);
+            Program._mobService.DoAttack(targetId, player.Id, weapon);
+            if (ammo == -1) return;
+            player.Inventory.First(i => i.Slot == ammo).Quantity--;
+        }
+
+        private static void PACKET_DISCHARGE(long connectionId, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var slot = buffer.ReadInteger();
+            buffer.Dispose();
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            if (player == null) return;
+            switch (slot)
+            {
+                case 4:
+                    player.Weap1Charge = 0;
+                    break;
+                case 5:
+                    player.Weap2Charge = 0;
+                    break;
+                case 6:
+                    player.Weap3Charge = 0;
+                    break;
+                case 7:
+                    player.Weap4Charge = 0;
+                    break;
+                case 8:
+                    player.Weap5Charge = 0;
+                    break;
+            }
+        }
+
+        private static void PACKET_LOGERROR(long connectionId, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var message = buffer.ReadString();
+            buffer.Dispose();
+            Cnsl.Warn(message);
+        }
+
+        private static void PACKET_MANUFACTURE(long connectionId, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            string[] invIDs = buffer.ReadList<string>().ToArray();
+            var qty = buffer.ReadInteger();
+            buffer.Dispose();
+            ItemManager.ManufactureItem(connectionId, invIDs, qty);
         }
         #endregion
     }

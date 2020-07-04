@@ -46,13 +46,14 @@
     <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Loot.cs" />
-    <Compile Include="Models\LootItem.cs" />
     <Compile Include="Models\Mob.cs" />
     <Compile Include="Models\MobType.cs" />
     <Compile Include="Models\Nebula.cs" />
     <Compile Include="Models\Planet.cs" />
+    <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\Star.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Packets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

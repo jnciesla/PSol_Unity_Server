@@ -52,6 +52,19 @@ namespace Data.Services
             return Console.CursorTop - 1;
         }
 
+        public static void Warn(string text)
+        {
+            lock (_MessageLock)
+            {
+                LineCount();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(@" [WARN]  " + text);
+                crLine++;
+                Console.ResetColor();
+            }
+        }
+
         public static void Banner(string text)
         {
             lock (_MessageLock)

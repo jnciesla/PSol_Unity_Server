@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DMod.Models
 {
@@ -9,8 +10,7 @@ namespace DMod.Models
         public string Owner { get; set; }
 
         // General
-        public string[] Items { get; set; }
-        public int[] Quantities { get; set; }
+        public List<Inventory> Items { get; set; }
         public int Credits { get; set; }
         public int Type { get; set; } = 0;
         // 0 = Normal

@@ -22,6 +22,7 @@ namespace DMod.Models
         public int Level { get; set; }
         public int Exp { get; set; }
         public int Credits { get; set; }
+        public bool Admin { get; set; }
 
         // Attributes
         public int Armor { get; set; }
@@ -33,6 +34,12 @@ namespace DMod.Models
         public int Offense { get; set; }
         public int Capacity { get; set; }
         public int Weapons { get; set; }
+        [NotMapped] public int Weap4MunSrc { get; set; }
+        [NotMapped] public int Weap5MunSrc { get; set; }
+        [NotMapped] public int Weap6MunSrc { get; set; }
+        [NotMapped] public int Weap7MunSrc { get; set; }
+        [NotMapped] public int Weap8MunSrc { get; set; }
+        public int FuelEnergy { get; set; }
 
         // Charges
         public int Weap1Charge { get; set; }

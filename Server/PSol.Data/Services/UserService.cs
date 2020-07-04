@@ -91,5 +91,52 @@ namespace Data.Services
         {
             return _userRepo.PasswordOK(username, password);
         }
+
+        public void RechargeSystems()
+        {
+            ActiveUsers.ForEach(user =>
+            {
+                if (user.Weap1Charge <= 100)
+                {
+                    user.Weap1Charge += user.Weap1ChargeRate;
+                }
+                else
+                {
+                    user.Weap1Charge = 100;
+                }
+                if (user.Weap2Charge <= 100)
+                {
+                    user.Weap2Charge += user.Weap2ChargeRate;
+                }
+                else
+                {
+                    user.Weap2Charge = 100;
+                }
+                if (user.Weap3Charge <= 100)
+                {
+                    user.Weap3Charge += user.Weap3ChargeRate;
+                }
+                else
+                {
+                    user.Weap3Charge = 100;
+                }
+                if (user.Weap4Charge <= 100)
+                {
+                    user.Weap4Charge += user.Weap4ChargeRate;
+                }
+                else
+                {
+                    user.Weap4Charge = 100;
+                }
+                if (user.Weap5Charge <= 100)
+                {
+                    user.Weap5Charge += user.Weap5ChargeRate;
+                }
+                else
+                {
+                    user.Weap5Charge = 100;
+                }
+            });
+        }
     }
 }
