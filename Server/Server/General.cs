@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
-using Bindings;
 using Data;
 using Data.Services;
 
@@ -88,6 +86,7 @@ namespace Server
             try
             {
                 Globals.Galaxy = Program._starService.LoadStars();
+                Globals.Structures = Program._starService.LoadStructures();
                 Cnsl.Finalize("Loading galaxy");
             }
             catch
@@ -96,6 +95,7 @@ namespace Server
                 return;
             }
             items += Globals.Galaxy.Count;
+            items += Globals.Structures.Count;
             var endTime = GetTickCount();
             Cnsl.Info(@"Data loaded (" + items + " points) in " + (endTime - startTime) + " ms.");
         }

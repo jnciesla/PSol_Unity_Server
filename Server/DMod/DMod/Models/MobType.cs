@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DMod.Models
+﻿namespace DMod.Models
 {
     public class MobType
     {

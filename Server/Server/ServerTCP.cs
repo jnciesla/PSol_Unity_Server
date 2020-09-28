@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Bindings;
 using Data;
 using Data.Services;
 
@@ -245,6 +244,7 @@ namespace Server
             var buffer = new ByteBuffer();
             buffer.WriteLong((long)ServerPackets.SGalaxy);
             buffer.WriteArray(Globals.Galaxy.ToArray());
+            buffer.WriteArray(Globals.Structures.ToArray());
             SendDataTo(index, buffer.ToArray());
             buffer.Dispose();
         }

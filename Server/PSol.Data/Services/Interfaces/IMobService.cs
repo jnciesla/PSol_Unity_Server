@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Bindings;
 using DMod.Models;
 
 namespace Data.Services.Interfaces
@@ -13,7 +12,7 @@ namespace Data.Services.Interfaces
         void GenerateLoot(User[] owners, Mob mob);
         void CheckAggro();
         void DoCombat();
-        Combat DoAttack(string targetId, string attackerId, Item weapon);
+        Combat DoAttack(string targetId, string attackerId, Item weapon, Item ammo);
         ICollection<Combat> GetCombats(int x, int y);
         Mob GetMob(string ID);
         void CycleArrays();

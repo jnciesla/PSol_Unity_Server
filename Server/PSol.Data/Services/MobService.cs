@@ -1,12 +1,9 @@
-﻿using Bindings;
-using DMod.Models;
+﻿using DMod.Models;
 using Data.Repositories.Interfaces;
 using Data.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
 
 namespace Data.Services
@@ -225,15 +222,22 @@ namespace Data.Services
                     Recharge = 15,
                     Type = "launcher"
                 };
+                var ammo = new Item
+                {
+                    Id = new Guid().ToString(),
+                    Slot = 23,
+                    Damage = 0,
+                    Type = "missile"
+                };
                 m.Weapon1CD += 25;
                 if (m.Weapon1CD > 2500)
                 {
                     m.Weapon1CD = 0;
-                    DoAttack(target.Id, m.Id, weap);
+                    DoAttack(target.Id, m.Id, weap, ammo);
                 }
             });
         }
-        public Combat DoAttack(string targetId, string attackerId, Item weapon)
+        public Combat DoAttack(string targetId, string attackerId, Item weapon, Item ammo)
         {
             var mobs = GetMobs().ToList();
             var combat = new Combat { SourceId = attackerId, TargetId = targetId, Weapon = weapon };
@@ -241,7 +245,8 @@ namespace Data.Services
             var sourcePlayer = _userService.ActiveUsers.Find(p => p?.Id == combat.SourceId);
             var sourceMob = mobs.Find(m => m.Id == combat.SourceId);
             var targetMob = mobs.Find(m => m.Id == combat.TargetId);
-            combat.WeaponDamage = rnd.Next(weapon.Damage - (int)Math.Ceiling(weapon.Damage * .2), weapon.Damage + (int)Math.Ceiling(weapon.Damage * .2));
+            var combinedDamage = weapon.Damage + ammo.Damage;
+            combat.WeaponDamage = rnd.Next(combinedDamage - (int)Math.Ceiling(combinedDamage * .2), combinedDamage + (int)Math.Ceiling(combinedDamage * .2));
             
             // If target was a mob, do combat here. Otherwise do it in calling method cause players are annoying
             if (targetMob != null)

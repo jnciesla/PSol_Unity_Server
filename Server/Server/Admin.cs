@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using Data;
+using DMod.Models;
 
 namespace Server
 {
@@ -133,10 +133,25 @@ namespace Server
             {
                 var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[connectionID]);
                 var part = msg.Split(new[] { ' ' }, 2);
-                var item = Globals.Items.First(i => i.Id == "6860e473-11f1-44c7-bcb3-9e2768b5bcbb");
                 var mob = Program._mobService.GetMob(part[1]);
-                Program._mobService.DoAttack(part[1], player.Id, item);
-                ServerTcp.SendMessage(-1, player.Name + " has dealt " + mob.Name + " " + item.Damage + " damage with an " + item.Name, (int)ChatPackets.Notification);
+                var weap = new Item
+                {
+                    Id = new Guid().ToString(),
+                    Slot = 22,
+                    Damage = 100000,
+                    Recharge = 1,
+                    Type = "launcher",
+                    Name = "Act of God"
+                };
+                var ammo = new Item
+                {
+                    Id = new Guid().ToString(),
+                    Slot = 23,
+                    Damage = 0,
+                    Type = "missile"
+                };
+                Program._mobService.DoAttack(part[1], player.Id, weap, ammo);
+                ServerTcp.SendMessage(-1, player.Name + " has dealt " + mob.Name + " " + weap.Damage + " damage with an " + weap.Name, (int)ChatPackets.Notification);
             }
         }
     }

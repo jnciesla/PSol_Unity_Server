@@ -21,6 +21,11 @@ namespace Data.Repositories
             return _context.Stars.Include(s => s.Planets).ToList();
         }
 
+        public ICollection<Structure> LoadStructures()
+        {
+            return _context.Structures.ToList();
+        }
+
         public void Dispose()
         {
             _context?.Dispose();

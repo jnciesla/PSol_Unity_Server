@@ -23,6 +23,7 @@ namespace DMod.Models
         public int Exp { get; set; }
         public int Credits { get; set; }
         public bool Admin { get; set; }
+        public string Color { get; set; }
 
         // Attributes
         public int Armor { get; set; }

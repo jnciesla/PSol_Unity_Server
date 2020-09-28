@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Bindings;
+using DMod.Models;
 using Data;
 using Data.Services;
 
@@ -236,7 +235,22 @@ namespace Server
             if (player == null) return;
             var weaponId = player.Inventory.First(w => w.Slot == weaponSlot).ItemId;
             var weapon = Globals.Items.First(w => w.Id == weaponId);
-            Program._mobService.DoAttack(targetId, player.Id, weapon);
+            Item _ammo;
+            if (ammo != -1)
+            {
+                var ammoId = player.Inventory.First(a => a.Slot == ammo).ItemId;
+                _ammo = Globals.Items.First(a => a.Id == ammoId);
+            } else
+            {
+                _ammo = new Item
+                {
+                    Id = new System.Guid().ToString(),
+                    Slot = 23,
+                    Damage = 0,
+                    Type = "missile"
+                };
+            }
+            Program._mobService.DoAttack(targetId, player.Id, weapon, _ammo);
             if (ammo == -1) return;
             player.Inventory.First(i => i.Slot == ammo).Quantity--;
         }

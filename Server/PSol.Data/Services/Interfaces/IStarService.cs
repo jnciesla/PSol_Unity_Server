@@ -6,5 +6,6 @@ namespace Data.Services.Interfaces
     public interface IStarService
     {
         ICollection<Star> LoadStars();
+        ICollection<Structure> LoadStructures();
     }
 }

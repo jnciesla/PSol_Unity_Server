@@ -6,5 +6,6 @@ namespace Data.Repositories.Interfaces
     public interface IStarRepository
     {
         ICollection<Star> LoadStars();
+        ICollection<Structure> LoadStructures();
     }
 }

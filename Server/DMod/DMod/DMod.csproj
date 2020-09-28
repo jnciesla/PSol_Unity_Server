@@ -52,6 +52,7 @@
     <Compile Include="Models\Planet.cs" />
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\Star.cs" />
+    <Compile Include="Models\Structure.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Packets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

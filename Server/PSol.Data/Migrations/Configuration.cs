@@ -23,11 +23,11 @@ namespace Data.Migrations
             context.Stars.AddOrUpdate(new Star
             {
                 Id = "7179FC09-EBAA-49D8-8ED4-A53F7B95F260",
-                Name = "Vyt",
-                Class = "MK - G",
-                Belligerence = "Moderate",
-                X = 1000,
-                Y = 1000,
+                Name = "51 Pegasi",
+                Class = "G2IV",
+                Belligerence = "Non-hostile",
+                X = 50000,
+                Y = 50000,
                 Planets = new List<Planet>()
             });
             context.Stars.AddOrUpdate(new Star
@@ -45,13 +45,13 @@ namespace Data.Migrations
             {
                 Id = "c804ef2e-793f-43f1-9d8f-d90a2df71d3a",
                 StarId = "7179FC09-EBAA-49D8-8ED4-A53F7B95F260",
-                Name = "Vyt I",
-                Class = "Terrestrial",
-                Belligerence = "Moderate",
+                Name = "Dimidium",
+                Class = "Gas giant",
+                Belligerence = "Non-hostile",
                 Orbit = 200,
                 Sprite = 2,
-                X = 1200,
-                Y = 1200,
+                X = 50200,
+                Y = 50200,
                 Color = "1"
             });
 
@@ -64,12 +64,12 @@ namespace Data.Migrations
                 MaxHealth = 100,
                 MaxShield = 100,
                 MaxSpawned = 4,
-                Name = "Vyt Scout",
+                Name = "Scout",
                 SpawnRadius = 100,
                 SpawnTimeMax = 45,
                 SpawnTimeMin = 20,
                 Sprite = 2,
-                Star = context.Stars.FirstOrDefault(s => s.Name == "Vyt")
+                Star = context.Stars.FirstOrDefault(s => s.Name == "51 Pegasi")
             });
 
             context.Items.AddOrUpdate(new Item
@@ -146,7 +146,7 @@ namespace Data.Migrations
                 Description = "Ore containing traces of gold",
                 Type = "Ore",
                 Image = 3,
-                Overlay = 5,
+                Overlay = 8,
                 OverlayColor = "196138000",
                 Mass = 1,
                 Cost = 8,

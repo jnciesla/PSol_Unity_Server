@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bindings;
 using DMod.Models;
 using Data.Repositories.Interfaces;
 using Data.Services.Interfaces;

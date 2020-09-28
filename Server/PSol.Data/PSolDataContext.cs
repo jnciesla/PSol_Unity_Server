@@ -14,6 +14,7 @@ namespace Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Inventory> Inventory { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Structure> Structures { get; set; }
 
         public PSolDataContext() : base("PSolDataConnection")
         {
@@ -74,6 +75,10 @@ namespace Data
                 .HasMaxLength(MaxIdLength);
 
             modelBuilder.Entity<Recipe>()
+                .Property(r => r.ID)
+                .HasMaxLength(MaxIdLength);
+
+            modelBuilder.Entity<Structure>()
                 .Property(r => r.ID)
                 .HasMaxLength(MaxIdLength);
         }

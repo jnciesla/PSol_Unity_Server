@@ -13,6 +13,7 @@ namespace DMod.Models
         public string Color { get; set; }
         public string Belligerence { get; set; }
         public string Class { get; set; }
+        public string Structure { get; set; }
 
         // Inventory
         public virtual ICollection<Inventory> Inventory { get; set; }

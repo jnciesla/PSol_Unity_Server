@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Migrations\201812100630040_Initial.cs" />
     <Compile Include="Migrations\201812100630040_Initial.Designer.cs">
@@ -71,6 +72,14 @@
     <Compile Include="Migrations\202007031301007_Recipes.cs" />
     <Compile Include="Migrations\202007031301007_Recipes.Designer.cs">
       <DependentUpon>202007031301007_Recipes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007202235022_Structres added.cs" />
+    <Compile Include="Migrations\202007202235022_Structres added.Designer.cs">
+      <DependentUpon>202007202235022_Structres added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009282301510_Added player color.cs" />
+    <Compile Include="Migrations\202009282301510_Added player color.Designer.cs">
+      <DependentUpon>202009282301510_Added player color.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PSolDataContext.cs" />
@@ -115,6 +124,12 @@
     <EmbeddedResource Include="Migrations\202007031301007_Recipes.resx">
       <DependentUpon>202007031301007_Recipes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007202235022_Structres added.resx">
+      <DependentUpon>202007202235022_Structres added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009282301510_Added player color.resx">
+      <DependentUpon>202009282301510_Added player color.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DMod\DMod\DMod.csproj">
@@ -122,6 +137,5 @@
       <Name>DMod</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\Bindings\Bindings.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
