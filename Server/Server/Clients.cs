@@ -52,7 +52,7 @@ namespace Server
         public void CloseSocket(int index)
         {
             Cnsl.Log("Connection from " + ip + " has been terminated");
-            var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[index]);
+            var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIDs[index]);
             if (player != null)
             {
                 ServerTcp.SendMessage(-1,player.Name + @" has disconnected.", (int)ChatPackets.Notification);
@@ -62,7 +62,7 @@ namespace Server
             Program._gameService.SaveGame(new List<User> { player });
             socket.Close();
             socket = null;
-            Globals.PlayerIds[index] = null;
+            Globals.PlayerIDs[index] = null;
             Program._userService.ActiveUsers.Remove(player);
         }
     }

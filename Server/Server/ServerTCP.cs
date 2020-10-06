@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Server
     {
         private static TcpListener serverSocket;
         private static TcpListener statusSocket;
-        public static Clients[] Client = new Clients[Constants.MAX_PLAYERS];
+        public static Dictionary<int, Clients> Client = new Dictionary<int, Clients>();
 
         public static void InitializeNetwork()
         {
@@ -57,17 +58,19 @@ namespace Server
         {
             var client = serverSocket.EndAcceptTcpClient(result);
             serverSocket.BeginAcceptTcpClient(OnClientConnect, null);
-            for (var i = 0; i < Constants.MAX_PLAYERS; i++)
+            var port = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
+            if (!Client.ContainsKey(port))
             {
-                if (Client[i].socket == null)
+                var newClient = new Clients
                 {
-                    Client[i].socket = client;
-                    Client[i].connectionID = i;
-                    Client[i].ip = client.Client.RemoteEndPoint.ToString();
-                    Client[i].Start();
-                    Cnsl.Log("Connection received from " + Client[i].ip + " | ConnectionID: " + Client[i].connectionID);
-                    return;
-                }
+                    socket = client,
+                    connectionID = port,
+                    ip = client.Client.RemoteEndPoint.ToString()
+                };
+                Client.Add(port, newClient);
+                Client[port].Start();
+                Cnsl.Log("Connection received from " + Client[port].ip);
+                return;
             }
         }
 
@@ -90,13 +93,13 @@ namespace Server
 
         public static void SendDataToAll(byte[] data)
         {
-            for (var i = 0; i < Constants.MAX_PLAYERS; i++)
+            foreach (var instance in Client)
             {
-                if (Client[i].socket == null) continue;
-                var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[i]);
+                if (instance.Value.socket == null) continue;
+                var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[instance.Value.connectionID]);
                 if (player == null) continue;
                 if (!player.inGame) continue;
-                SendDataTo(i, data);
+                SendDataTo(instance.Value.connectionID, data);
             }
         }
 
@@ -104,7 +107,7 @@ namespace Server
         public static void SendIngame(int connectionId, int suppress = 0)
         {
             var buffer = new ByteBuffer();
-            var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIDs[connectionId]);
             buffer.WriteLong((long)ServerPackets.SIngame);
             buffer.WriteInteger(connectionId);
             buffer.WriteInteger(suppress);
@@ -137,7 +140,7 @@ namespace Server
         public static void SendInventory(int connectionId)
         {
             var buffer = new ByteBuffer();
-            var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIDs[connectionId]);
             buffer.WriteLong((long)ServerPackets.SInventory);
             buffer.WriteArray(player.Inventory.ToArray());
             SendDataTo(connectionId, buffer.ToArray());
@@ -156,13 +159,10 @@ namespace Server
 
         public static void SendToGalaxy(int connectionId)
         {
-            for (var i = 0; i < Constants.MAX_PLAYERS; i++)
+            foreach (var instance in Client)
             {
-                if (Client[i].socket == null) continue;
-                if (i != connectionId)
-                {
-                    SendDataTo(connectionId, PlayerData(i));
-                }
+                if (instance.Value.socket == null) continue;
+                if (connectionId != instance.Value.connectionID) SendDataTo(connectionId, PlayerData(instance.Value.connectionID));
             }
             SendDataToAll(PlayerData(connectionId));
         }
@@ -190,11 +190,12 @@ namespace Server
             Program._mobService.CycleArrays();
             Program._mobService.CheckAggro();
             Program._mobService.DoCombat();
-            for (var i = 0; i < Constants.MAX_PLAYERS; i++)
+            foreach (var instance in Client)
             {
-                if (Client[i].socket != null)
+                if (instance.Value.socket != null)
                 {
-                    var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[i]);
+                    if (!Globals.PlayerIDs.ContainsKey(instance.Value.connectionID)) continue;
+                    var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[instance.Value.connectionID]);
                     if (player == null) continue;
                     if (player.inGame && player.receiving)
                     {
@@ -204,8 +205,7 @@ namespace Server
                         buffer.WriteBytes(BitConverter.GetBytes(DateTime.UtcNow.ToBinary()));
                         Program._userService.ActiveUsers.ForEach(p =>
                         {
-                            var index = Array.IndexOf(Globals.PlayerIds, p.Id);
-                            buffer.WriteInteger(index);
+                            buffer.WriteInteger(p.connectionID);
                             buffer.WriteString(p.Id);
                             buffer.WriteFloat(p.X);
                             buffer.WriteFloat(p.Z);
@@ -224,7 +224,7 @@ namespace Server
                             buffer.WriteInteger(player.Weap3Charge);
                             buffer.WriteInteger(player.Weap4Charge);
                             buffer.WriteInteger(player.Weap5Charge);
-                            buffer.WriteBytes(BitConverter.GetBytes(Program._userService.ActiveUsers[index].inGame));
+                            buffer.WriteBytes(BitConverter.GetBytes(p.inGame));
                         });
                         var minX = (int)player.X - look;
                         var minY = (int)player.Z - look;
@@ -233,7 +233,7 @@ namespace Server
                         buffer.WriteArray(Program._mobService.GetMobs(minX, maxX, minY, maxY).ToArray());
                         buffer.WriteArray(Program._mobService.GetCombats((int)player.X, (int)player.Z).ToArray());
                         buffer.WriteArray(Globals.Loot.Where(m => m.X >= minX && m.X <= maxX && m.Y >= minY && m.Y <= maxY).ToArray());
-                        SendDataTo(i, buffer.ToArray());
+                        SendDataTo(instance.Value.connectionID, buffer.ToArray());
                         buffer.Dispose();
                     }
                 }

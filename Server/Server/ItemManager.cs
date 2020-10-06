@@ -7,9 +7,9 @@ namespace Server
 {
     public class ItemManager
     {
-        public static void Equip(long connectionId, int from, int to)
+        public static void Equip(int connectionId, int from, int to)
         {
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             if (player == null) return;
             var inv = player.Inventory.First(i => i.Slot == from);
             var newInv = player.Inventory.FirstOrDefault(i => i.Slot == to);
@@ -69,7 +69,7 @@ namespace Server
                     inv.Slot = to;
                 }
             }
-            ServerTcp.SendInventory((int)connectionId);
+            ServerTcp.SendInventory(connectionId);
         }
 
         public static void AddToInventory(User player, string itemId, int qty)
@@ -93,7 +93,7 @@ namespace Server
             {
                 AddNew(player, itemId, qty);
             }
-            ServerTcp.SendInventory(Array.IndexOf(Globals.PlayerIds, player.Id));
+            ServerTcp.SendInventory(Globals.PlayerIDs.First(p => p.Value == player.Id).Key);
         }
 
         private static void AddExisting(Inventory slot, User player, string itemId, int qty)
@@ -130,10 +130,10 @@ namespace Server
             return -1;
         }
 
-        public static void CollectLoot(long connectionId, string lootId, int slot)
+        public static void CollectLoot(int connectionId, string lootId, int slot)
         {
             var player =
-                Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+                Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             if (player == null) return;
             var loot = Globals.Loot.FirstOrDefault(l => l.Id == lootId);
             if (loot == null) return;
@@ -157,14 +157,14 @@ namespace Server
             }
         }
 
-        public static void PurchaseItem(long connectionId, string shopId, int slot, int qty)
+        public static void PurchaseItem(int connectionId, string shopId, int slot, int qty)
         {
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
         }
 
-        public static void SellItem(long connectionId, int slot, int qty)
+        public static void SellItem(int connectionId, int slot, int qty)
         {
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             var inv = player?.Inventory.FirstOrDefault(i => i.Slot == slot);
             if (inv == null) return;
             var itm = Globals.Items.FirstOrDefault(i => i.Id == inv.ItemId);
@@ -179,12 +179,12 @@ namespace Server
                 player.Credits += itm.Cost * inv.Quantity;
                 player.Inventory.Remove(inv);
             }
-            ServerTcp.SendInventory(Array.IndexOf(Globals.PlayerIds, player.Id));
+            ServerTcp.SendInventory(Globals.PlayerIDs.First(p => p.Value == player.Id).Key);
         }
 
-        public static void ManufactureItem(long connectionId, string[] invIDs, int qty)
+        public static void ManufactureItem(int connectionId, string[] invIDs, int qty)
         {
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             var preHash = "";
             for (var i = 0; i < 8; i++)
             {
@@ -211,9 +211,9 @@ namespace Server
             }
         }
 
-        public static void PurchaseShip(long connectionId, string shopId, string invId, string color)
+        public static void PurchaseShip(int connectionId, string shopId, string invId, string color)
         {
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             var cost = 0;
             var newShip = "null";
             if (invId != "null") {
@@ -236,7 +236,7 @@ namespace Server
                 player.Color = color;
                 player.Credits -= cost;
             }
-            ServerTcp.SendIngame((int)connectionId, 1);
+            ServerTcp.SendIngame(connectionId, 1);
         }
     }
 }

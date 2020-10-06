@@ -17,7 +17,7 @@ namespace Data
         public static ICollection<Loot> Loot = new List<Loot>();
         public static ICollection<Structure> Structures = new List<Structure>();
         public static List<Nebula> Nebulae = new List<Nebula>();
-        public static string[] PlayerIds = new string[Constants.MAX_PLAYERS];
+        public static Dictionary<int, string> PlayerIDs = new Dictionary<int, string>();
         public static Dictionary<string, string> RecipeHash = new Dictionary<string, string>();
     }
 }

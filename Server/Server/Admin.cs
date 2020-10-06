@@ -6,24 +6,24 @@ namespace Server
 {
     public class Admin
     {
-        public static void HandleCommand(long connectionID, string msg)
+        public static void HandleCommand(int connectionID, string msg)
         {
             if (msg.ToLower().StartsWith("*goto"))
             {
-                var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[connectionID]);
+                var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIDs[connectionID]);
                 var dest = msg.Split(new[] { ' ' }, 2);
                 var coords = dest[1].Split(',');
                 var testx = int.TryParse(coords[0].Trim(), out var x);
                 var testy = int.TryParse(coords[1].Trim(), out var y);
                 if (!testx || !testy || x > 100000 || x < 0 || y > 100000 || y < 0)
                 {
-                    ServerTcp.SendMessage((int)connectionID, "Invalid coordinates", (int)ChatPackets.Error);
+                    ServerTcp.SendMessage(connectionID, "Invalid coordinates", (int)ChatPackets.Error);
                 }
                 else
                 {
                     player.X = x;
                     player.Z = y;
-                    ServerTcp.SendIngame((int)connectionID, 1);
+                    ServerTcp.SendIngame(connectionID, 1);
                 }
             }
 
@@ -45,11 +45,11 @@ namespace Server
                     var player = Program._userService.ActiveUsers.Find(p => string.Equals(p.Name, part[1], StringComparison.CurrentCultureIgnoreCase));
                     if (player == null)
                     {
-                        ServerTcp.SendMessage((int)connectionID, "User does not exist", (int)ChatPackets.Error);
+                        ServerTcp.SendMessage(connectionID, "User does not exist", (int)ChatPackets.Error);
                         return;
                     }
                     player.Exp += int.Parse(part[3]);
-                    ServerTcp.SendIngame((int)connectionID, 1);
+                    ServerTcp.SendIngame(connectionID, 1);
                 }
 
                 if (msg.ToLower().Contains(" item "))
@@ -59,7 +59,7 @@ namespace Server
                         string.Equals(p.Name, part[1], StringComparison.CurrentCultureIgnoreCase));
                     if (player == null)
                     {
-                        ServerTcp.SendMessage((int)connectionID, "User does not exist", (int)ChatPackets.Error);
+                        ServerTcp.SendMessage(connectionID, "User does not exist", (int)ChatPackets.Error);
                         return;
                     }
                     ItemManager.AddToInventory(player, part[3], int.Parse(part[2]));
@@ -72,7 +72,7 @@ namespace Server
                         string.Equals(p.Name, part[1], StringComparison.CurrentCultureIgnoreCase));
                     if (player == null)
                     {
-                        ServerTcp.SendMessage((int)connectionID, "User does not exist", (int)ChatPackets.Error);
+                        ServerTcp.SendMessage(connectionID, "User does not exist", (int)ChatPackets.Error);
                         return;
                     }
                     player.Credits += int.Parse(part[2].Substring(1));
@@ -85,7 +85,7 @@ namespace Server
                         string.Equals(p.Name, part[1], StringComparison.CurrentCultureIgnoreCase));
                     if (player == null)
                     {
-                        ServerTcp.SendMessage((int)connectionID, "User does not exist", (int)ChatPackets.Error);
+                        ServerTcp.SendMessage(connectionID, "User does not exist", (int)ChatPackets.Error);
                         return;
                     }
 
@@ -115,7 +115,7 @@ namespace Server
                         string.Equals(p.Name, part[1], StringComparison.CurrentCultureIgnoreCase));
                     if (player == null)
                     {
-                        ServerTcp.SendMessage((int)connectionID, "User does not exist", (int)ChatPackets.Error);
+                        ServerTcp.SendMessage(connectionID, "User does not exist", (int)ChatPackets.Error);
                         return;
                     }
 
@@ -131,7 +131,7 @@ namespace Server
 
             if (msg.ToLower().StartsWith("*destroy"))
             {
-                var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[connectionID]);
+                var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIDs[connectionID]);
                 var part = msg.Split(new[] { ' ' }, 2);
                 var mob = Program._mobService.GetMob(part[1]);
                 var weap = new Item

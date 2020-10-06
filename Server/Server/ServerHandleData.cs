@@ -8,7 +8,7 @@ namespace Server
 {
     public class ServerHandleData
     {
-        private delegate void Packet(long connectionId, byte[] data);
+        private delegate void Packet(int connectionId, byte[] data);
 
         private static Dictionary<long, Packet> packets;
         private static long pLength;
@@ -35,7 +35,7 @@ namespace Server
             Cnsl.Finalize("Initializing Network Packets");
         }
 
-        public static void HandleData(long connectionId, byte[] data)
+        public static void HandleData(int connectionId, byte[] data)
         {
             var buffer = (byte[])data.Clone();
 
@@ -85,7 +85,7 @@ namespace Server
             }
         }
 
-        private static void HandleDataPackets(long connectionId, byte[] data)
+        private static void HandleDataPackets(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -99,7 +99,7 @@ namespace Server
         }
         #region Handle packets
 
-        private static void PACKET_CLIENTMOVEMENT(long connectionId, byte[] data)
+        private static void PACKET_CLIENTMOVEMENT(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -110,7 +110,7 @@ namespace Server
             var Z = buffer.ReadFloat();     // Roll
             var M = buffer.ReadInteger();   // Moving
             buffer.Dispose();
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             if (player == null) return;
             player.X = x;
             player.Z = z;
@@ -119,7 +119,7 @@ namespace Server
             player.M = M;
         }
 
-        private static void PACKET_CLIENTMESSAGE(long connectionId, byte[] data)
+        private static void PACKET_CLIENTMESSAGE(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -127,7 +127,7 @@ namespace Server
             var msg = buffer.ReadString();
             if (msg.ToLower().StartsWith("/c"))
             {
-                var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIds[connectionId]);
+                var player = Program._userService.ActiveUsers.Find(p => p.Id == Globals.PlayerIDs[connectionId]);
                 var newString = player.Name + ": " + msg.Substring(3);
                 ServerTcp.SendMessage(-1, newString, (int)ChatPackets.Chat);
             }
@@ -139,7 +139,7 @@ namespace Server
             buffer.Dispose();
         }
 
-        private static void PACKET_LOGIN(long connectionId, byte[] data)
+        private static void PACKET_LOGIN(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -149,36 +149,37 @@ namespace Server
             var validate = Program._userService.PasswordOK(user, pass);
             if (!validate)
             {
-                ServerTcp.SendSystemByte((int)connectionId, SystemBytes.SysInvPass);
+                ServerTcp.SendSystemByte(connectionId, SystemBytes.SysInvPass);
                 return;
             }
             buffer.Dispose();
 
             var player = Program._userService.LoadPlayer(user);
             player.inGame = true;
-            Globals.PlayerIds[connectionId] = player.Id;
+            player.connectionID = connectionId;
+            Globals.PlayerIDs.Add(connectionId, player.Id);
             Program._userService.ActiveUsers.Add(player);
-            ServerTcp.SendGlobals((int)connectionId);
+            ServerTcp.SendGlobals(connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTcp.SendItems((int)connectionId);
+            ServerTcp.SendItems(connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTcp.SendToGalaxy((int)connectionId);
+            ServerTcp.SendToGalaxy(connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTcp.SendIngame((int)connectionId);
+            ServerTcp.SendIngame(connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTcp.SendInventory((int)connectionId);
+            ServerTcp.SendInventory(connectionId);
             //ServerTCP.SendNebulae(connectionID);
             ServerTcp.SendMessage(-1, player.Name + " has connected.", (int)ChatPackets.Notification);
             System.Threading.Thread.Sleep(250);
-            ServerTcp.SendGalaxy((int)connectionId);
+            ServerTcp.SendGalaxy(connectionId);
             System.Threading.Thread.Sleep(250);
-            ServerTcp.SendRecipes((int)connectionId);
+            ServerTcp.SendRecipes(connectionId);
             Globals.FullData = true;
             Cnsl.Log(user + @" logged in successfully.");
             player.receiving = true;
         }
 
-        private static void PACKET_EQUIP(long connectionId, byte[] data)
+        private static void PACKET_EQUIP(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -189,7 +190,7 @@ namespace Server
             ItemManager.Equip(connectionId, from, to);
         }
 
-        private static void PACKET_LOOT(long connectionId, byte[] data)
+        private static void PACKET_LOOT(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -200,7 +201,7 @@ namespace Server
             ItemManager.CollectLoot(connectionId, lootId, slot);
         }
 
-        private static void PACKET_PURCHASE(long connectionId, byte[] data)
+        private static void PACKET_PURCHASE(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -212,7 +213,7 @@ namespace Server
             ItemManager.PurchaseItem(connectionId, shopId, slot, qty);
         }
 
-        private static void PACKET_SELL(long connectionId, byte[] data)
+        private static void PACKET_SELL(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -223,7 +224,7 @@ namespace Server
             ItemManager.SellItem(connectionId, slot, qty);
         }
 
-        private static void PACKET_ATTACK(long connectionId, byte[] data)
+        private static void PACKET_ATTACK(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -232,7 +233,7 @@ namespace Server
             var weaponSlot = buffer.ReadInteger();
             var ammo = buffer.ReadInteger();
             buffer.Dispose();
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             if (player == null) return;
             var weaponId = player.Inventory.First(w => w.Slot == weaponSlot).ItemId;
             var weapon = Globals.Items.First(w => w.Id == weaponId);
@@ -256,14 +257,14 @@ namespace Server
             player.Inventory.First(i => i.Slot == ammo).Quantity--;
         }
 
-        private static void PACKET_DISCHARGE(long connectionId, byte[] data)
+        private static void PACKET_DISCHARGE(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             buffer.ReadLong();
             var slot = buffer.ReadInteger();
             buffer.Dispose();
-            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIDs[connectionId]);
             if (player == null) return;
             switch (slot)
             {
@@ -285,7 +286,7 @@ namespace Server
             }
         }
 
-        private static void PACKET_LOGERROR(long connectionId, byte[] data)
+        private static void PACKET_LOGERROR(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -295,7 +296,7 @@ namespace Server
             Cnsl.Warn(message);
         }
 
-        private static void PACKET_MANUFACTURE(long connectionId, byte[] data)
+        private static void PACKET_MANUFACTURE(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
@@ -306,7 +307,7 @@ namespace Server
             ItemManager.ManufactureItem(connectionId, invIDs, qty);
         }
 
-        private static void PACKET_HANGAR(long connectionId, byte[] data)
+        private static void PACKET_HANGAR(int connectionId, byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);

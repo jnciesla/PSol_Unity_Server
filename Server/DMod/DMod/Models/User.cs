@@ -11,6 +11,7 @@ namespace DMod.Models
         public string Password { get; set; }
         [NotMapped] public bool inGame { get; set; }
         [NotMapped] public bool receiving { get; set; }
+        [NotMapped] public int connectionID { get; set; }
 
         // General
         public string Rank { get; set; }
