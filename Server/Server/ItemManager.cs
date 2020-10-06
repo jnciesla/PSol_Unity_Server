@@ -210,5 +210,33 @@ namespace Server
                 AddToInventory(player, recipe.Output, qty);
             }
         }
+
+        public static void PurchaseShip(long connectionId, string shopId, string invId, string color)
+        {
+            var player = Program._userService.ActiveUsers.FirstOrDefault(p => p.Id == Globals.PlayerIds[connectionId]);
+            var cost = 0;
+            var newShip = "null";
+            if (invId != "null") {
+                var shop = Globals.Structures.First(i => i.ID == shopId);
+                var inv = shop.Inventory.First(i => i.Id == invId);
+                var item = Globals.Items.First(i => i.Id == inv.ItemId);
+                var oldShipInv = player.Inventory.First(i => i.Slot == 24);
+                var oldShip = Globals.Items.First(i => i.Id == oldShipInv.ItemId);
+                newShip = inv.ItemId;
+                cost += item.Cost;
+                cost -= oldShip.Cost;
+            }
+            if (color != "0")
+            {
+                cost += 1000;
+            }
+            if (cost <= player.Credits)
+            {
+                if (newShip != "null") player.Inventory.First(i => i.Slot == 24).ItemId = newShip;
+                player.Color = color;
+                player.Credits -= cost;
+            }
+            ServerTcp.SendIngame((int)connectionId, 1);
+        }
     }
 }

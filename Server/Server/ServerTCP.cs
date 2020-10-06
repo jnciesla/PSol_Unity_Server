@@ -129,6 +129,7 @@ namespace Server
             buffer.WriteInteger(player.Weap5Charge);
             buffer.WriteArray(player.Inventory.ToArray());
             buffer.WriteInteger(player.Admin ? 1 : 0);
+            buffer.WriteString(player.Color);
             SendDataTo(connectionId, buffer.ToArray());
             buffer.Dispose();
         }
@@ -262,6 +263,7 @@ namespace Server
         {
             var buffer = new ByteBuffer();
             buffer.WriteLong((long)ServerPackets.SGlobals);
+            buffer.WriteInteger(index);
             buffer.WriteInteger(Constants.LVL_BASE);
             buffer.WriteInteger(Constants.MAX_LEVEL);
             buffer.WriteFloat(Constants.LVL_EXPONENT);

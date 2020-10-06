@@ -25,7 +25,8 @@ public enum ClientPackets
     CShopSell,
     CDischarge,
     CLog,
-    CManufacture
+    CManufacture,
+    CHangarBuy
 }
 
 public enum SystemBytes

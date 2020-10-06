@@ -29,6 +29,7 @@ namespace Server
                 { (long)ClientPackets.CDischarge, PACKET_DISCHARGE },
                 { (long)ClientPackets.CLog, PACKET_LOGERROR },
                 { (long)ClientPackets.CManufacture, PACKET_MANUFACTURE },
+                { (long)ClientPackets.CHangarBuy, PACKET_HANGAR },
 
             };
             Cnsl.Finalize("Initializing Network Packets");
@@ -303,6 +304,17 @@ namespace Server
             var qty = buffer.ReadInteger();
             buffer.Dispose();
             ItemManager.ManufactureItem(connectionId, invIDs, qty);
+        }
+
+        private static void PACKET_HANGAR(long connectionId, byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadLong();
+            var shopId = buffer.ReadString();
+            var invId = buffer.ReadString();
+            var color = buffer.ReadString();
+            ItemManager.PurchaseShip(connectionId, shopId, invId, color);
         }
         #endregion
     }
